@@ -133,8 +133,18 @@ class BlureVC: UIViewController {
 		let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture(sender:)))
         blureView?.addGestureRecognizer(tabGestureRecognizer)
 		
-		let tabGestureRecognizerCurtain = UITapGestureRecognizer(target: self, action: #selector(tapGestureCurtain(sender:)))
-        curtain?.addGestureRecognizer(tabGestureRecognizerCurtain)
+		//жест при тапе по шторки убираем клавиатуру
+		
+		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
+			if view.isTFView{
+				let tabGestureRecognizerCurtain = UITapGestureRecognizer(target: self, action: #selector(tapGestureCurtain(sender:)))
+				curtain?.addGestureRecognizer(tabGestureRecognizerCurtain)
+				tabGestureRecognizerCurtain.require(toFail: panGestureRecognizer)
+				
+				return
+			}
+		})
+		
     }
 	
 	@objc func panGesture(sender: UIPanGestureRecognizer) {
@@ -171,7 +181,9 @@ class BlureVC: UIViewController {
 	@objc func tapGestureCurtain(sender: UIPanGestureRecognizer) {
 		
 		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			view.uiviewTextFirsResponser()
+			if view.uiviewTextFirsResponser(){
+				return
+			}
 		})
 	}
 	
@@ -239,6 +251,21 @@ extension UIView {
 		
 		if let TV = self as? UITextView, TV.isFirstResponder{
 			TV.resignFirstResponder()
+			return true
+		}
+		
+		
+		return false
+	}
+	
+	var isTFView: Bool{
+		
+		if let _ = self as? UITextField{
+			return true
+		}
+		
+		
+		if let _ = self as? UITextView{
 			return true
 		}
 		
