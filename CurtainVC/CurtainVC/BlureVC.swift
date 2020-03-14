@@ -140,10 +140,7 @@ class BlureVC: UIViewController {
 		
 		let koef = CurtainConstant.koefBlure(newPosition: frame.origin.y)
 		
-		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			view.alpha = koef
-		})
-		
+		self.aphaAllContentCurtain(alpha: koef)
 		self.blureView.blureAt(koef)
 		
 		if sender.state == .ended {
@@ -153,9 +150,16 @@ class BlureVC: UIViewController {
 		
 	}
 	
+	private func aphaAllContentCurtain(alpha: CGFloat){
+		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
+			view.alpha = alpha
+		})
+	}
+	
 	private func finalGestureAnimate(_ dismiss: Bool){
 		
 		blureView.enumBlureValue = dismiss ? .min : .max
+		let finishAlpha: CGFloat = dismiss ? 0 : 1
 		let frame = dismiss ?  CurtainConstant.startFrame : CurtainConstant.finishFrame
 		
 		UIView.animate(withDuration: smallWayTimeInterval,
@@ -164,6 +168,7 @@ class BlureVC: UIViewController {
 					   animations: {
 						self.blureView.blureValue()
 						self.curtain?.frame = frame
+						self.aphaAllContentCurtain(alpha: finishAlpha)
 		}) {[weak self] (compl) in
 			if compl, dismiss{
 				self?.dismiss(animated: false, completion: nil)
