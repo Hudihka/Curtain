@@ -17,7 +17,7 @@ class ViewController: UIViewController {
 	}
 
 	@IBAction func presentBlure(_ sender: Any) {
-		BlureVC.presentBlure()
+		BlureVC.presentBlure(value: .curtain)
 		
 		
 		DispatchQueue.main.asyncAfter(deadline: .now() + 3) {

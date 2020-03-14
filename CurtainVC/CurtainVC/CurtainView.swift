@@ -14,6 +14,7 @@ class CurtainView: UIView {
 	
 	init() {
 		super.init(frame: CurtainConstant.startFrame)
+		startDesing()
 	}
 	
 	required init?(coder: NSCoder) {

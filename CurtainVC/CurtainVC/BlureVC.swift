@@ -13,6 +13,8 @@ enum EnumBlure{
 	case curtain
 }
 
+let allWayTimeInterval: TimeInterval = 0.30
+let smallWayTimeInterval: TimeInterval = 0.2
 
 class BlureVC: UIViewController {
 	
@@ -21,10 +23,13 @@ class BlureVC: UIViewController {
 	
 	var enumBlure: EnumBlure = .spiner
 	
+	var curtain: CurtainView?
+	
 	override func viewDidLoad() {
         super.viewDidLoad()
 
 		Vibro.weak()
+		
     }
 	
 	//MARK: - CREATE
@@ -71,8 +76,43 @@ class BlureVC: UIViewController {
 			blureView.blureValue()
 			self.spiner.startAnimating()
 		case .curtain:
-			print("curtain")
+			self.curtain = CurtainView()
+			curtainAnimmate(addCurtain: true)
 		}
+	}
+	
+	private func curtainAnimmate(addCurtain: Bool){
+		
+		guard let curtain = curtain else {return}
+		
+		if addCurtain {
+			self.view.addSubview(curtain)
+			
+			self.curtain?.dissmisBlock = {
+				self.curtainAnimmate(addCurtain: false)
+			}
+		}
+		
+		blureView.enumBlureValue = addCurtain ? .max : .min
+		let frame = addCurtain ? CurtainConstant.finishFrame : CurtainConstant.startFrame
+		
+		UIView.animate(withDuration: allWayTimeInterval,
+					   delay: 0,
+					   usingSpringWithDamping: 0.8,
+					   initialSpringVelocity: 0,
+					   options: .curveEaseInOut,
+					   animations: {
+						
+						self.blureView.blureValue()
+						curtain.frame = frame
+						
+		}, completion: {[weak self] (compl) in
+			if compl, addCurtain == false{
+				self?.dismiss(animated: false, completion: nil)
+			}
+		})
+		
+		
 	}
 
 
