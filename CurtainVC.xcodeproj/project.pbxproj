@@ -15,6 +15,10 @@
 		527691D6241CAD2D0079FF64 /* Constats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691D5241CAD2D0079FF64 /* Constats.swift */; };
 		527691D8241CAE030079FF64 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691D7241CAE030079FF64 /* VisualEffectView.swift */; };
 		527691DA241CB4CA0079FF64 /* CurtainConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691D9241CB4CA0079FF64 /* CurtainConstant.swift */; };
+		527691DE241CBD970079FF64 /* BlureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691DD241CBD970079FF64 /* BlureVC.swift */; };
+		527691E2241CC08C0079FF64 /* UIWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691E0241CC08C0079FF64 /* UIWindows.swift */; };
+		527691E3241CC08C0079FF64 /* Vibro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691E1241CC08C0079FF64 /* Vibro.swift */; };
+		52A57800241CC83900260AC7 /* CurtainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A577FF241CC83900260AC7 /* CurtainView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +32,10 @@
 		527691D5241CAD2D0079FF64 /* Constats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constats.swift; sourceTree = "<group>"; };
 		527691D7241CAE030079FF64 /* VisualEffectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
 		527691D9241CB4CA0079FF64 /* CurtainConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurtainConstant.swift; sourceTree = "<group>"; };
+		527691DD241CBD970079FF64 /* BlureVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlureVC.swift; sourceTree = "<group>"; };
+		527691E0241CC08C0079FF64 /* UIWindows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIWindows.swift; sourceTree = "<group>"; };
+		527691E1241CC08C0079FF64 /* Vibro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vibro.swift; sourceTree = "<group>"; };
+		52A577FF241CC83900260AC7 /* CurtainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurtainView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +74,7 @@
 				527691C9241CAC5E0079FF64 /* Assets.xcassets */,
 				527691CB241CAC5E0079FF64 /* LaunchScreen.storyboard */,
 				527691CE241CAC5E0079FF64 /* Info.plist */,
-				527691D5241CAD2D0079FF64 /* Constats.swift */,
-				527691D7241CAE030079FF64 /* VisualEffectView.swift */,
+				527691DF241CC0770079FF64 /* Extension */,
 				527691D4241CAC930079FF64 /* CurtainVC */,
 			);
 			path = CurtainVC;
@@ -77,8 +84,21 @@
 			isa = PBXGroup;
 			children = (
 				527691D9241CB4CA0079FF64 /* CurtainConstant.swift */,
+				527691DD241CBD970079FF64 /* BlureVC.swift */,
+				52A577FF241CC83900260AC7 /* CurtainView.swift */,
 			);
 			path = CurtainVC;
+			sourceTree = "<group>";
+		};
+		527691DF241CC0770079FF64 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				527691E0241CC08C0079FF64 /* UIWindows.swift */,
+				527691E1241CC08C0079FF64 /* Vibro.swift */,
+				527691D5241CAD2D0079FF64 /* Constats.swift */,
+				527691D7241CAE030079FF64 /* VisualEffectView.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -152,9 +172,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				52A57800241CC83900260AC7 /* CurtainView.swift in Sources */,
+				527691E3241CC08C0079FF64 /* Vibro.swift in Sources */,
 				527691DA241CB4CA0079FF64 /* CurtainConstant.swift in Sources */,
+				527691E2241CC08C0079FF64 /* UIWindows.swift in Sources */,
 				527691D6241CAD2D0079FF64 /* Constats.swift in Sources */,
 				527691D8241CAE030079FF64 /* VisualEffectView.swift in Sources */,
+				527691DE241CBD970079FF64 /* BlureVC.swift in Sources */,
 				527691C5241CAC590079FF64 /* ViewController.swift in Sources */,
 				527691C1241CAC590079FF64 /* AppDelegate.swift in Sources */,
 			);
@@ -303,6 +327,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LQJFLL24MV;
 				INFOPLIST_FILE = CurtainVC/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -310,7 +335,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.testCollectionView.CurtainVC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -321,6 +346,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LQJFLL24MV;
 				INFOPLIST_FILE = CurtainVC/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -328,7 +354,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.testCollectionView.CurtainVC;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

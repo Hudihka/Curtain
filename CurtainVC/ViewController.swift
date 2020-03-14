@@ -13,8 +13,17 @@ class ViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view.
+		
 	}
 
-
+	@IBAction func presentBlure(_ sender: Any) {
+		BlureVC.presentBlure()
+		
+		
+		DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//			BlureVC.dismissBlure(completion: nil)
+		}
+	}
+	
 }
 
