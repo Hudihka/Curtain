@@ -107,13 +107,108 @@ class BlureVC: UIViewController {
 						curtain.frame = frame
 						
 		}, completion: {[weak self] (compl) in
-			if compl, addCurtain == false{
-				self?.dismiss(animated: false, completion: nil)
+			if compl{
+				
+				if addCurtain {
+					self?.addPanGestures()
+				} else {
+					self?.dismiss(animated: false, completion: nil)
+				}
 			}
+			
 		})
 		
 		
 	}
 
+	//gestures
+
+	
+    private func addPanGestures(){
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
+        panGestureRecognizer.minimumNumberOfTouches = 1
+
+        curtain?.addGestureRecognizer(panGestureRecognizer)
+    }
+	
+	@objc func panGesture(sender: UIPanGestureRecognizer) {
+		
+		let translatedPoint = sender.translation(in: self.view).y
+		let frame = CurtainConstant.newFrame(translatedPointY: translatedPoint)
+		
+		self.curtain?.frame = frame
+		
+		let koef = CurtainConstant.koefBlure(translatedPointY: translatedPoint)
+		
+		//		print(koef)
+		
+		self.curtain?.alpha = koef
+		self.blureView.blureAt(koef)
+		
+		if sender.state == .ended {
+			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
+			self.finalGestureAnimate(dismiss)
+		}
+		
+		
+		
+		//		print(translatedPoint)
+		//
+		//
+		//		if translatedPoint >= 0 {
+		//
+		//		} else {
+		//
+		//		}
+		//
+		//
+		//		            if sender.state == .ended {
+		//		                self.dismisViewCurtainTask(back: translatedPoint > yPointDissmis)
+		//		            }
+		
+		
+		//        let yPoint = translatedPoint - startReloadAlphaY
+		//        let koef = 1 - (yPoint / allWayReloadAlpha)
+		//
+		//        let curtainActive = curtainFilters ?? curtainTF
+		//
+		//        if translatedPoint >= finishPointYCurtainFilters {
+		//            curtainActive?.frame = CGRect(x: 0, y: translatedPoint, width: wDdevice, height: heightCurtainFilters)
+		//
+		//            if translatedPoint > startReloadAlphaY , koef <= 1{
+		//                blureView?.blureAt(koef)
+		//                curtainAlpha(alpha: koef)
+		//            }
+		//
+		//            if sender.state == .ended {
+		//                self.dismisViewCurtainTask(back: translatedPoint > yPointDissmis)
+		//            }
+		//
+		//        } else {
+		//            curtainActive?.frame = finishFrameCurtainFilters
+		//        }
+	}
+	
+	private func finalGestureAnimate(_ dismiss: Bool){
+		
+		blureView.enumBlureValue = dismiss ? .min : .max
+		let frame = dismiss ?  CurtainConstant.startFrame : CurtainConstant.finishFrame
+		
+		UIView.animate(withDuration: smallWayTimeInterval,
+					   delay: 0,
+					   options: [.curveEaseOut],
+					   animations: {
+						self.blureView.blureValue()
+						self.curtain?.frame = frame
+		}) {[weak self] (compl) in
+			if compl, dismiss{
+				self?.dismiss(animated: false, completion: nil)
+			}
+		}
+		
+		
+		
+		
+	}
 
 }

@@ -33,17 +33,23 @@ struct CurtainConstant {
 	//когда высота шторки равна procentReloadBlure * heightCurtain
 	//начиинаем менять блюр и альфу
 	
-	private static let procentReloadBlure: CGFloat = 0.9
+	private static let procentReloadBlure: CGFloat = 0.5
 	
-	static var startYPositionReloadBlure: CGFloat {
-		return hDdevice - procentReloadBlure * heightCurtain
-	}
+	private static let startYPositionReloadBlure = hDdevice - procentReloadBlure * heightCurtain
 	
-	func koefBlure(yPoint: CGFloat) -> CGFloat {
+	static func koefBlure(translatedPointY: CGFloat) -> CGFloat {
 		
-		let newValue = hDdevice - yPoint
-		return newValue / CurtainConstant.startYPositionReloadBlure
+		let newPosition = finishYPoint + translatedPointY
 		
+		let newValue2 = hDdevice - newPosition - startYPositionReloadBlure
+		print(newValue2)
+		
+		if startYPositionReloadBlure >= newPosition {
+			return 1
+		} else {
+			let newValue = hDdevice - newPosition - startYPositionReloadBlure
+			return abs(newValue) / startYPositionReloadBlure
+		}
 	}
 	
 	//процентрное значение,
@@ -52,7 +58,31 @@ struct CurtainConstant {
 	
 	private static let procentDissmisCurtain: CGFloat = 0.45
 	
-	static var startYPositionDissmis: CGFloat {
-		return hDdevice - procentDissmisCurtain * heightCurtain
+	// дисмисмисем
+	
+	static func dismiss(yPoint: CGFloat) -> Bool {
+		
+		let pointDissmis = hDdevice - procentDissmisCurtain * heightCurtain
+		
+		return yPoint > pointDissmis
 	}
+	
+	//выщитываем новый фрейм
+	
+	static func newFrame(translatedPointY: CGFloat) -> CGRect{
+		
+		var yDelta: CGFloat = 0
+		
+		if translatedPointY > 0{
+			
+			yDelta = translatedPointY
+			
+		} else {
+			yDelta = -1 * sqrt(abs(translatedPointY))
+		}
+		
+		
+		return CGRect(origin: CGPoint(x: 0, y: finishYPoint + yDelta), size: size)
+	}
+	
 }
