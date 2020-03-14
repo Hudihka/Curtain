@@ -14,6 +14,7 @@
 		527691CD241CAC5E0079FF64 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 527691CB241CAC5E0079FF64 /* LaunchScreen.storyboard */; };
 		527691D6241CAD2D0079FF64 /* Constats.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691D5241CAD2D0079FF64 /* Constats.swift */; };
 		527691D8241CAE030079FF64 /* VisualEffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691D7241CAE030079FF64 /* VisualEffectView.swift */; };
+		527691DA241CB4CA0079FF64 /* CurtainConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691D9241CB4CA0079FF64 /* CurtainConstant.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		527691CE241CAC5E0079FF64 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		527691D5241CAD2D0079FF64 /* Constats.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constats.swift; sourceTree = "<group>"; };
 		527691D7241CAE030079FF64 /* VisualEffectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VisualEffectView.swift; sourceTree = "<group>"; };
+		527691D9241CB4CA0079FF64 /* CurtainConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurtainConstant.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +76,7 @@
 		527691D4241CAC930079FF64 /* CurtainVC */ = {
 			isa = PBXGroup;
 			children = (
+				527691D9241CB4CA0079FF64 /* CurtainConstant.swift */,
 			);
 			path = CurtainVC;
 			sourceTree = "<group>";
@@ -149,6 +152,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				527691DA241CB4CA0079FF64 /* CurtainConstant.swift in Sources */,
 				527691D6241CAD2D0079FF64 /* Constats.swift in Sources */,
 				527691D8241CAE030079FF64 /* VisualEffectView.swift in Sources */,
 				527691C5241CAC590079FF64 /* ViewController.swift in Sources */,
