@@ -121,7 +121,7 @@ class BlureVC: UIViewController {
 		
 	}
 
-	//gestures
+	//MARK: gestures
 
 	
     private func addPanGestures(){
@@ -129,6 +129,12 @@ class BlureVC: UIViewController {
         panGestureRecognizer.minimumNumberOfTouches = 1
 
         curtain?.addGestureRecognizer(panGestureRecognizer)
+		
+		let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture(sender:)))
+        blureView?.addGestureRecognizer(tabGestureRecognizer)
+		
+		let tabGestureRecognizerCurtain = UITapGestureRecognizer(target: self, action: #selector(tapGestureCurtain(sender:)))
+        curtain?.addGestureRecognizer(tabGestureRecognizerCurtain)
     }
 	
 	@objc func panGesture(sender: UIPanGestureRecognizer) {
@@ -140,7 +146,7 @@ class BlureVC: UIViewController {
 		
 		let koef = CurtainConstant.koefBlure(newPosition: frame.origin.y)
 		
-		self.aphaAllContentCurtain(alpha: koef)
+		self.aphaAllContentCurtain(alpha: koef, dissmisKeybord: true)
 		self.blureView.blureAt(koef)
 		
 		if sender.state == .ended {
@@ -150,9 +156,36 @@ class BlureVC: UIViewController {
 		
 	}
 	
-	private func aphaAllContentCurtain(alpha: CGFloat){
+	@objc func tapGesture(sender: UIPanGestureRecognizer) {
+		if let array = self.curtain?.recurrenceAllSubviews{
+			for view in array {
+				if view.uiviewTextFirsResponser(){
+					return
+				}
+			}
+		}
+		
+		self.finalGestureAnimate(true)
+	}
+	
+	@objc func tapGestureCurtain(sender: UIPanGestureRecognizer) {
+		
 		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			view.alpha = alpha
+			view.uiviewTextFirsResponser()
+		})
+	}
+	
+	private func aphaAllContentCurtain(alpha: CGFloat?, dissmisKeybord: Bool){
+		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
+			
+			if let alpha = alpha {
+				view.alpha = alpha
+			}
+			
+			if dissmisKeybord{
+				view.uiviewTextFirsResponser()
+			}
+			
 		})
 	}
 	
@@ -168,7 +201,7 @@ class BlureVC: UIViewController {
 					   animations: {
 						self.blureView.blureValue()
 						self.curtain?.frame = frame
-						self.aphaAllContentCurtain(alpha: finishAlpha)
+						self.aphaAllContentCurtain(alpha: finishAlpha, dissmisKeybord: false)
 		}) {[weak self] (compl) in
 			if compl, dismiss{
 				self?.dismiss(animated: false, completion: nil)
@@ -195,5 +228,22 @@ extension UIView {
 
         return all
     }
+	
+	@discardableResult func uiviewTextFirsResponser() -> Bool{
+		
+		if let TF = self as? UITextField, TF.isFirstResponder{
+			TF.resignFirstResponder()
+			return true
+		}
+		
+		
+		if let TV = self as? UITextView, TV.isFirstResponder{
+			TV.resignFirstResponder()
+			return true
+		}
+		
+		
+		return false
+	}
 	
 }

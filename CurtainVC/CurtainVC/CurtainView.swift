@@ -24,12 +24,16 @@ class CurtainView: UIView {
 	private func startDesing(){
 		self.backgroundColor = UIColor.red
 		
-		let button = UIButton(frame: CGRect(x: 100, y: 100, width: 100, height: 50))
+		let button = UIButton(frame: CGRect(x: 100, y: 200, width: 100, height: 50))
 		button.backgroundColor = .green
 		button.setTitle("Test Button", for: .normal)
 		button.addTarget(self, action: #selector(dissmisSelf), for: .touchUpInside)
 
 		self.addSubview(button)
+		
+		let TF = UITextView(frame: CGRect(x: 10, y: 10, width: 200, height: 30))
+		TF.backgroundColor = UIColor.green
+		self.addSubview(TF)
 	}
 	
 	
