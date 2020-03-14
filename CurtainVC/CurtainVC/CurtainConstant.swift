@@ -33,22 +33,21 @@ struct CurtainConstant {
 	//когда высота шторки равна procentReloadBlure * heightCurtain
 	//начиинаем менять блюр и альфу
 	
-	private static let procentReloadBlure: CGFloat = 0.5
+	private static let procentReloadBlure: CGFloat = 0.6
 	
-	private static let startYPositionReloadBlure = hDdevice - procentReloadBlure * heightCurtain
+	//это высота шторки начиная с которой мы меняем блюр
 	
-	static func koefBlure(translatedPointY: CGFloat) -> CGFloat {
-		
-		let newPosition = finishYPoint + translatedPointY
-		
-		let newValue2 = hDdevice - newPosition - startYPositionReloadBlure
-		print(newValue2)
+	private static let hStartRelodBlure = procentReloadBlure * heightCurtain
+	
+	private static let startYPositionReloadBlure = hDdevice - hStartRelodBlure
+	
+	static func koefBlure(newPosition: CGFloat) -> CGFloat {
 		
 		if startYPositionReloadBlure >= newPosition {
 			return 1
 		} else {
-			let newValue = hDdevice - newPosition - startYPositionReloadBlure
-			return abs(newValue) / startYPositionReloadBlure
+			let newValue = newPosition - startYPositionReloadBlure
+			return (hStartRelodBlure - newValue) / hStartRelodBlure
 		}
 	}
 	

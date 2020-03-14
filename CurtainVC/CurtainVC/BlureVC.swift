@@ -138,11 +138,12 @@ class BlureVC: UIViewController {
 		
 		self.curtain?.frame = frame
 		
-		let koef = CurtainConstant.koefBlure(translatedPointY: translatedPoint)
+		let koef = CurtainConstant.koefBlure(newPosition: frame.origin.y)
 		
-		//		print(koef)
+		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
+			view.alpha = koef
+		})
 		
-		self.curtain?.alpha = koef
 		self.blureView.blureAt(koef)
 		
 		if sender.state == .ended {
@@ -150,43 +151,6 @@ class BlureVC: UIViewController {
 			self.finalGestureAnimate(dismiss)
 		}
 		
-		
-		
-		//		print(translatedPoint)
-		//
-		//
-		//		if translatedPoint >= 0 {
-		//
-		//		} else {
-		//
-		//		}
-		//
-		//
-		//		            if sender.state == .ended {
-		//		                self.dismisViewCurtainTask(back: translatedPoint > yPointDissmis)
-		//		            }
-		
-		
-		//        let yPoint = translatedPoint - startReloadAlphaY
-		//        let koef = 1 - (yPoint / allWayReloadAlpha)
-		//
-		//        let curtainActive = curtainFilters ?? curtainTF
-		//
-		//        if translatedPoint >= finishPointYCurtainFilters {
-		//            curtainActive?.frame = CGRect(x: 0, y: translatedPoint, width: wDdevice, height: heightCurtainFilters)
-		//
-		//            if translatedPoint > startReloadAlphaY , koef <= 1{
-		//                blureView?.blureAt(koef)
-		//                curtainAlpha(alpha: koef)
-		//            }
-		//
-		//            if sender.state == .ended {
-		//                self.dismisViewCurtainTask(back: translatedPoint > yPointDissmis)
-		//            }
-		//
-		//        } else {
-		//            curtainActive?.frame = finishFrameCurtainFilters
-		//        }
 	}
 	
 	private func finalGestureAnimate(_ dismiss: Bool){
@@ -206,9 +170,25 @@ class BlureVC: UIViewController {
 			}
 		}
 		
-		
-		
-		
 	}
 
+}
+
+
+extension UIView {
+	
+    var recurrenceAllSubviews: [UIView] {//получение всех UIView
+        var all = [UIView]()
+        func getSubview(view: UIView) {
+            all.append(view)
+            guard !view.subviews.isEmpty else {
+                return
+            }
+            view.subviews.forEach { getSubview(view: $0) }
+        }
+        getSubview(view: self)
+
+        return all
+    }
+	
 }
