@@ -136,6 +136,7 @@ class BlureVC: UIViewController {
 		//жест при тапе по шторки убираем клавиатуру
 		
 		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
+			
 			if view.isTFView{
 				let tabGestureRecognizerCurtain = UITapGestureRecognizer(target: self, action: #selector(tapGestureCurtain(sender:)))
 				curtain?.addGestureRecognizer(tabGestureRecognizerCurtain)
@@ -148,6 +149,7 @@ class BlureVC: UIViewController {
     }
 	
 	@objc func panGesture(sender: UIPanGestureRecognizer) {
+		
 		
 		let translatedPoint = sender.translation(in: self.view).y
 		let frame = CurtainConstant.newFrame(translatedPointY: translatedPoint)

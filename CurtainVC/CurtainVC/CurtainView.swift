@@ -9,6 +9,10 @@
 import UIKit
 
 class CurtainView: UIView {
+	//нужно для направления прокрутки
+	private var lastContentOffset: CGFloat = 0.5
+	
+	
 
 	var dissmisBlock: () -> () = { }
 	
@@ -42,6 +46,11 @@ class CurtainView: UIView {
 	
 	@objc func dissmisSelf(sender: UIButton!) {
 	  dissmisBlock()
+	}
+	
+	private func addGestures(){
+		
+		
 	}
 	
 }
@@ -84,4 +93,63 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 	}
 	
 	
+	func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
+//		print("1111")
+	}
+	
+	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+//		scrollView.isScrollEnabled = true
+//		print("2222") //поставили палец
+	}
+	
+	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+//		print("3333") //законченна анимация
+	}
+	
+	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+		//		таблица не скрольться в низ
+		scrollView.isScrollEnabled = true
+//		print("44444") //отпустили
+	}
+	
+	func scrollViewDidScroll(_ scrollView: UIScrollView) {
+		
+//		таблица не скрольться в низ
+		
+		
+		print(scrollView.contentSize)
+		
+		
+		if (self.lastContentOffset > scrollView.contentOffset.y), scrollView.contentOffset.y < 0.5 {
+			scrollView.isScrollEnabled = false
+		} else {
+		   scrollView.isScrollEnabled = true
+		}
+
+		// update the new position acquired
+		self.lastContentOffset = scrollView.contentOffset.y
+    }
+	
+	
+}
+
+
+extension CurtainView: UIGestureRecognizerDelegate {
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+        if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && gestureRecognizer.view == tableView && gestureRecognizer.view == tableView {
+            print("test 1")
+        }
+        return true
+    }
+
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
+        if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && gestureRecognizer.view == tableView && gestureRecognizer.view == tableView {
+            print("test 2")
+        }
+        return true
+    }
+
 }
