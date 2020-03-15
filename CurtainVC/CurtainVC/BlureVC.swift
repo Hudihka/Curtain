@@ -91,6 +91,11 @@ class BlureVC: UIViewController {
 			self.curtain?.dissmisBlock = {
 				self.curtainAnimmate(addCurtain: false)
 			}
+			
+			self.curtain?.gestersBlock = { gesters in
+//				print(gesters.translation(in: self.view).y)
+				self.panGesture(sender: gesters)
+			}
 		}
 		
 		blureView.enumBlureValue = addCurtain ? .max : .min
@@ -176,8 +181,7 @@ class BlureVC: UIViewController {
 				}
 			}
 		}
-		
-		self.finalGestureAnimate(true)
+		self.curtainAnimmate(addCurtain: false)
 	}
 	
 	@objc func tapGestureCurtain(sender: UIPanGestureRecognizer) {

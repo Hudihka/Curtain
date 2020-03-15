@@ -12,21 +12,10 @@ class CurtainView: UIView {
 	//нужно для направления прокрутки
 	private var lastContentOffset: CGFloat = 0.5
 	
-	private var scrollViewObj: UIScrollView? {
-		
-		var SV: UIScrollView?
-		
-		self.recurrenceAllSubviews.forEach({ (view) in
-			if let SVreturn = view as? UIScrollView {
-				SV = SVreturn
-			}
-		})
-		
-		return SV
-	}
-	
+	private var scrollViewObj: UIScrollView?
 	
 	var dissmisBlock: () -> () = { }
+	var gestersBlock: (UIPanGestureRecognizer) -> () = { _ in }
 	
 	
 	
@@ -55,6 +44,8 @@ class CurtainView: UIView {
 		self.addSubview(button)
 		
 		self.desingTV()
+		
+		addGestures()
 	}
 	
 	
@@ -62,9 +53,22 @@ class CurtainView: UIView {
 	  dissmisBlock()
 	}
 	
-	private func addGestures(){
+	func addGestures(){
 		
+		for view in self.recurrenceAllSubviews {
+			if let SV = view as? UIScrollView {
+				scrollViewObj = SV
+				break
+			}
+		}
 		
+		if let SV = scrollViewObj {
+			let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
+			panGestureRecognizer.minimumNumberOfTouches = 1
+			
+			panGestureRecognizer.delegate = self
+			SV.addGestureRecognizer(panGestureRecognizer)
+		}
 	}
 	
 }
@@ -104,19 +108,16 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 		
 		self.addSubview(tableView)
 		
-		
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
-        panGestureRecognizer.minimumNumberOfTouches = 1
-		
-		panGestureRecognizer.delegate = self
-        tableView.addGestureRecognizer(panGestureRecognizer)
-		
 	}
 	
     @objc func panGesture(sender: UIPanGestureRecognizer) {
-		print("gesters")
+		
+		self.gestersBlock(sender)
     }
 	
+}
+	
+extension CurtainView: UIScrollViewDelegate {
 	
 	func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
 //		print("1111")
@@ -163,18 +164,20 @@ extension CurtainView: UIGestureRecognizerDelegate {
 
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
 
-        if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && gestureRecognizer.view == tableView && gestureRecognizer.view == tableView {
-            print("test 1")
+        if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && gestureRecognizer.view == scrollViewObj && gestureRecognizer.view == scrollViewObj {
+			
+			
         }
+		
         return true
     }
 
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+
 //        if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && gestureRecognizer.view == tableView && gestureRecognizer.view == tableView {
 //            print("test 2")
 //        }
-//        return true
-//    }
+        return true
+    }
 
 }
