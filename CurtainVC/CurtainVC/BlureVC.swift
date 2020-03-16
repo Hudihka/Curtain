@@ -52,14 +52,16 @@ class BlureVC: UIViewController {
 		UIApplication.shared.workVC.present(VC, animated: false, completion: nil)
     }
 	
-	//только для сппинера
-	
 	static func dismissBlure(completion: (() -> Void)?) {
 		
-		if let VC = UIApplication.shared.workVC as? BlureVC, VC.enumBlure == .spiner{
-			VC.dismiss(animated: false, completion: completion)
+		if let VC = UIApplication.shared.workVC as? BlureVC {
+			if VC.enumBlure == .spiner{
+				VC.dismiss(animated: false, completion: completion)
+			} else {
+				VC.curtainAnimmate(addCurtain: false, completionDissmis: completion)
+			}
 		}
-    }
+	}
 
 
     override func viewWillAppear(_ animated: Bool) {
@@ -81,7 +83,7 @@ class BlureVC: UIViewController {
 		}
 	}
 	
-	private func curtainAnimmate(addCurtain: Bool){
+	private func curtainAnimmate(addCurtain: Bool, completionDissmis: (() -> Void)? = nil){
 		
 		guard let curtain = curtain else {return}
 		
@@ -90,11 +92,6 @@ class BlureVC: UIViewController {
 			
 			self.curtain?.dissmisBlock = {
 				self.curtainAnimmate(addCurtain: false)
-			}
-			
-			self.curtain?.gestersBlock = { gesters in
-//				print(gesters.translation(in: self.view).y)
-				self.panGesture(sender: gesters)
 			}
 		}
 		
@@ -117,7 +114,7 @@ class BlureVC: UIViewController {
 				if addCurtain {
 					self?.addPanGestures()
 				} else {
-					self?.dismiss(animated: false, completion: nil)
+					self?.dismiss(animated: false, completion: completionDissmis)
 				}
 			}
 			

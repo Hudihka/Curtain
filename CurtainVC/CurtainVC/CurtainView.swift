@@ -16,7 +16,6 @@ class CurtainView: UIView {
 	private var blockView: UIView?
 	
 	var dissmisBlock: () -> () = { }
-	var gestersBlock: (UIPanGestureRecognizer) -> () = { _ in }
 	
 	
 	
@@ -46,38 +45,11 @@ class CurtainView: UIView {
 		
 		self.desingTV()
 		
-		addGestures()
 	}
 	
 	
 	@objc func dissmisSelf(sender: UIButton!) {
 	  dissmisBlock()
-	}
-	
-	func addGestures(){
-		
-		for view in self.recurrenceAllSubviews {
-			if let SV = view as? UIScrollView {
-				scrollViewObj = SV
-				break
-			}
-		}
-		
-		if let SV = scrollViewObj {
-			let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
-			panGestureRecognizer.minimumNumberOfTouches = 1
-			
-//			panGestureRecognizer.delegate = self
-//			SV.addGestureRecognizer(panGestureRecognizer)
-			
-			blockView = UIView(frame: SV.frame)
-			blockView?.backgroundColor = UIColor.clear
-			self.addSubview(blockView!)
-
-			//false значит можно шевелить пальцем
-			blockView?.isUserInteractionEnabled = false
-			blockView?.addGestureRecognizer(panGestureRecognizer)
-		}
 	}
 	
 }
@@ -119,14 +91,6 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 		
 	}
 	
-    @objc func panGesture(sender: UIPanGestureRecognizer) {
-		print("____________________-")
-//		self.gestersBlock(sender)
-		
-		if sender.state == .ended{
-			blockView?.isUserInteractionEnabled = false
-		}
-    }
 	
 }
 	
@@ -137,7 +101,7 @@ extension CurtainView: UIScrollViewDelegate {
 	}
 	
 	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-		blockView?.isUserInteractionEnabled = false
+//		blockView?.isUserInteractionEnabled = false
 //		print("2222") //поставили палец
 	}
 	
@@ -148,50 +112,22 @@ extension CurtainView: UIScrollViewDelegate {
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		//		таблица не скрольться в низ
 //		scrollView.isScrollEnabled = true
-		blockView?.isUserInteractionEnabled = false
+//		blockView?.isUserInteractionEnabled = false
 //		print("44444") //отпустили
 	}
 	
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
-		if (self.lastContentOffset > scrollView.contentOffset.y), scrollView.contentOffset.y < 0.5 {
-//			scrollView.isScrollEnabled = false
-			blockView?.isUserInteractionEnabled = true
-		} else {
-//		   scrollView.isScrollEnabled = true
-		blockView?.isUserInteractionEnabled = false
-		}
+//		if (self.lastContentOffset > scrollView.contentOffset.y), scrollView.contentOffset.y < 0.5 {
+////			scrollView.isScrollEnabled = false
+//			blockView?.isUserInteractionEnabled = true
+//		} else {
+////		   scrollView.isScrollEnabled = true
+//		blockView?.isUserInteractionEnabled = false
+//		}
 //
     }
 	
 	
 }
 
-
-extension CurtainView: UIGestureRecognizerDelegate {
-
-	func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-
-		return true
-	}
-	
-//    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-//        let panregognizer = gestureRecognizer as? UIPanGestureRecognizer
-//        let velocity =  panregognizer?.velocity(in: nil) ?? .zero
-//
-//
-//		print("++++++++++")
-//
-//        return true
-//    }
-
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//
-//        if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && otherGestureRecognizer.isKind(of: UIPanGestureRecognizer.self) && gestureRecognizer.view == tableView && gestureRecognizer.view == tableView {
-//
-//        }
-//
-//        return true
-//    }
-
-}
