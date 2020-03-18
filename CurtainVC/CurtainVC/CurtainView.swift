@@ -13,7 +13,6 @@ class CurtainView: UIView {
 	private var lastContentOffset: CGFloat = 0.5
 	
 	private var scrollViewObj: UIScrollView?
-	private var blockView: UIView?
 	
 	var dissmisBlock: () -> () = { }
 	
@@ -111,20 +110,17 @@ extension CurtainView: UIScrollViewDelegate {
 	
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		//		таблица не скрольться в низ
-//		scrollView.isScrollEnabled = true
-//		blockView?.isUserInteractionEnabled = false
+		scrollView.isScrollEnabled = true
 //		print("44444") //отпустили
 	}
 	
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
-//		if (self.lastContentOffset > scrollView.contentOffset.y), scrollView.contentOffset.y < 0.5 {
-////			scrollView.isScrollEnabled = false
-//			blockView?.isUserInteractionEnabled = true
-//		} else {
-////		   scrollView.isScrollEnabled = true
-//		blockView?.isUserInteractionEnabled = false
-//		}
+		if (self.lastContentOffset > scrollView.contentOffset.y), scrollView.contentOffset.y < 0.5 {
+			scrollView.isScrollEnabled = false
+		} else {
+		   scrollView.isScrollEnabled = true
+		}
 //
     }
 	

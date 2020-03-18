@@ -21,6 +21,10 @@ class BlureVC: UIViewController {
 	@IBOutlet weak var blureView: VisualEffectView!
 	@IBOutlet weak var spiner: UIActivityIndicatorView!
 	
+	var panGestureRecognizer: UIPanGestureRecognizer?
+	
+	var SV: UIScrollView?
+	
 	var enumBlure: EnumBlure = .spiner
 	
 	var curtain: CurtainView?
@@ -127,10 +131,10 @@ class BlureVC: UIViewController {
 
 	
     private func addPanGestures(){
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
-        panGestureRecognizer.minimumNumberOfTouches = 1
+		self.panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
+		panGestureRecognizer?.minimumNumberOfTouches = 1
 
-        curtain?.addGestureRecognizer(panGestureRecognizer)
+		curtain?.addGestureRecognizer(panGestureRecognizer!)
 		
 		let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture(sender:)))
         blureView?.addGestureRecognizer(tabGestureRecognizer)
@@ -139,20 +143,26 @@ class BlureVC: UIViewController {
 		
 		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
 			
+			if let svView = view as? UIScrollView{
+				self.SV = svView
+				panGestureRecognizer?.delegate = self
+			}
+			
 			if view.isTFView{
 				let tabGestureRecognizerCurtain = UITapGestureRecognizer(target: self, action: #selector(tapGestureCurtain(sender:)))
 				curtain?.addGestureRecognizer(tabGestureRecognizerCurtain)
-				tabGestureRecognizerCurtain.require(toFail: panGestureRecognizer)
-				
-				return
+				tabGestureRecognizerCurtain.require(toFail: panGestureRecognizer!)
 			}
+			
+			
+			
 		})
 		
     }
 	
 	@objc func panGesture(sender: UIPanGestureRecognizer) {
 		
-		
+		print("=====")
 		let translatedPoint = sender.translation(in: self.view).y
 		let frame = CurtainConstant.newFrame(translatedPointY: translatedPoint)
 		
@@ -225,6 +235,66 @@ class BlureVC: UIViewController {
 		
 	}
 
+}
+
+extension BlureVC: UIGestureRecognizerDelegate{
+	
+	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+		
+//		if let gesters =
+//
+//		let velocity: CGPoint = gestureRecognizer.velocity(in: SV)
+//
+//		print(velocity)
+		
+		guard let myGesters = self.panGestureRecognizer else {return true}
+//
+		if myGesters.isEqual(gestureRecognizer){
+			
+			if myGesters.location(in: SV).y < 0 {
+				print("жест не в таблице")
+			} else if SV?.contentOffset.y == 0{
+				self.panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer
+				print("нулю офсет равен")
+			} else {
+				print("жест в таблице")
+			}
+			
+//			print(myGesters.location(in: SV).y)
+//			print(myGesters.location(in: self.curtain).y)
+			
+		}
+		
+		
+		
+		
+//		if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) == false{
+//			return true
+//		}
+//
+////
+//		if gestureRecognizer.isEqual(SV?.panGestureRecognizer) == false {
+//
+//			if SV?.contentOffset.y != 0 {
+//				return false
+//			}
+//
+//			let velocity: CGPoint = UIPanGestureRecognizer().velocity(in: SV)
+//
+//			print(velocity)
+//			if velocity.y > abs(velocity.x){
+//				return true
+//			}
+//
+//
+//			return true
+//		}
+		
+		
+		return true
+	}
+	
+	
 }
 
 
