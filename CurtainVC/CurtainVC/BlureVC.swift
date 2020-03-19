@@ -139,7 +139,7 @@ class BlureVC: UIViewController {
 		let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture(sender:)))
         blureView?.addGestureRecognizer(tabGestureRecognizer)
 		
-		//жест при тапе по шторки убираем клавиатуру
+		//жест тянем таблицу
 		
 		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
 			
@@ -147,22 +147,12 @@ class BlureVC: UIViewController {
 				self.SV = svView
 				panGestureRecognizer?.delegate = self
 			}
-			
-			if view.isTFView{
-				let tabGestureRecognizerCurtain = UITapGestureRecognizer(target: self, action: #selector(tapGestureCurtain(sender:)))
-				curtain?.addGestureRecognizer(tabGestureRecognizerCurtain)
-				tabGestureRecognizerCurtain.require(toFail: panGestureRecognizer!)
-			}
-			
-			
-			
 		})
 		
     }
 	
 	@objc func panGesture(sender: UIPanGestureRecognizer) {
 		
-		print("=====")
 		let translatedPoint = sender.translation(in: self.view).y
 		let frame = CurtainConstant.newFrame(translatedPointY: translatedPoint)
 		
@@ -188,17 +178,10 @@ class BlureVC: UIViewController {
 				}
 			}
 		}
+		
 		self.curtainAnimmate(addCurtain: false)
 	}
 	
-	@objc func tapGestureCurtain(sender: UIPanGestureRecognizer) {
-		
-		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			if view.uiviewTextFirsResponser(){
-				return
-			}
-		})
-	}
 	
 	private func aphaAllContentCurtain(alpha: CGFloat?, dissmisKeybord: Bool){
 		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
