@@ -96,6 +96,11 @@ class BlureVC: UIViewController {
 			self.curtain?.dissmisBlock = {
 				self.curtainAnimmate(addCurtain: false)
 			}
+			
+//			self.curtain?.blockOffsetSV = { offset in
+//				print(offset)
+//				self.reloadFrameCurtain(translatedPoint: offset)
+//			}
 		}
 		
 		blureView.enumBlureValue = addCurtain ? .max : .min
@@ -137,29 +142,25 @@ class BlureVC: UIViewController {
 
         curtain?.addGestureRecognizer(panGestureRecognizer)
 		
-        
-        let tableViewPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
-        tableViewPanGestureRecognizer.minimumNumberOfTouches = 1
-        tableViewPanGestureRecognizer.cancelsTouchesInView = false
-		tableViewPanGestureRecognizer.delegate = self
-        
-        curtain?.tableView.addGestureRecognizer(tableViewPanGestureRecognizer)
+		//если есть скролл вью
 		
-		SV = curtain?.tableView
+		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
+			if let svView = view as? UIScrollView{
+				self.SV = svView
+				
+				let tableViewPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
+				tableViewPanGestureRecognizer.minimumNumberOfTouches = 1
+				tableViewPanGestureRecognizer.cancelsTouchesInView = false
+				tableViewPanGestureRecognizer.delegate = self
+				
+				self.SV?.addGestureRecognizer(tableViewPanGestureRecognizer)
+			}
+		})
+		
+		//дисмис клавиатуры
 		
 		let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture(sender:)))
         blureView?.addGestureRecognizer(tabGestureRecognizer)
-		
-		tabGestureRecognizer.delegate = self
-		
-//		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-//
-//			if let svView = view as? UIScrollView{
-//				self.SV = svView
-//				panGestureRecognizer.delegate = self
-//			}
-//
-//		})
 		
     }
 	
@@ -236,12 +237,14 @@ extension BlureVC: UIGestureRecognizerDelegate {
 	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
 		
 		if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) == false{
+			print("__________")
 			return true
 		}
 
 		if gestureRecognizer.isEqual(SV?.panGestureRecognizer) == false {
 
 			if SV?.contentOffset.y != 0 {
+				print("---------")
 				return false
 			}
             
@@ -250,14 +253,15 @@ extension BlureVC: UIGestureRecognizerDelegate {
 			let velocity: CGPoint = panGestureRecognizer.velocity(in: SV)
 
 			if velocity.y > abs(velocity.x) {
+				print(")))))))")
 				return true
 			}
             
-
+			print("(((())))")
 			return false
 		}
 		
-		
+		print("6666666")
 		return true
 	}
 	
