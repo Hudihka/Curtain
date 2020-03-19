@@ -11,15 +11,15 @@ import UIKit
 
 struct CurtainConstant {
 	
+	//высота видимой части шторки
+	
+	static var heightCurtain: CGFloat = 450
+	
 	private static let size = CGSize(width: wDdevice, height: hDdevice)
 	
 	// стартовая позция шторки
 	
 	static let startFrame = CGRect(origin: CGPoint(x: 0, y: hDdevice), size: size)
-	
-	//высота видимой части шторки
-	
-	static var heightCurtain: CGFloat = 450
 	
 	//конечное положение шторки
 	
