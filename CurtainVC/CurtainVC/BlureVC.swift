@@ -21,7 +21,6 @@ class BlureVC: UIViewController {
 	@IBOutlet weak var blureView: VisualEffectView!
 	@IBOutlet weak var spiner: UIActivityIndicatorView!
 	
-	var panGestureRecognizer: UIPanGestureRecognizer?
 	
 	var SV: UIScrollView?
 	
@@ -131,23 +130,36 @@ class BlureVC: UIViewController {
 
 	
     private func addPanGestures(){
-		self.panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
-		panGestureRecognizer?.minimumNumberOfTouches = 1
+		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
+		panGestureRecognizer.minimumNumberOfTouches = 1
+        panGestureRecognizer.cancelsTouchesInView = false
+		panGestureRecognizer.delegate = self
 
-		curtain?.addGestureRecognizer(panGestureRecognizer!)
+        curtain?.addGestureRecognizer(panGestureRecognizer)
+		
+        
+        let tableViewPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
+        tableViewPanGestureRecognizer.minimumNumberOfTouches = 1
+        tableViewPanGestureRecognizer.cancelsTouchesInView = false
+		tableViewPanGestureRecognizer.delegate = self
+        
+        curtain?.tableView.addGestureRecognizer(tableViewPanGestureRecognizer)
+		
+		SV = curtain?.tableView
 		
 		let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture(sender:)))
         blureView?.addGestureRecognizer(tabGestureRecognizer)
 		
-		//жест тянем таблицу
+		tabGestureRecognizer.delegate = self
 		
-		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			
-			if let svView = view as? UIScrollView{
-				self.SV = svView
-				panGestureRecognizer?.delegate = self
-			}
-		})
+//		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
+//
+//			if let svView = view as? UIScrollView{
+//				self.SV = svView
+//				panGestureRecognizer.delegate = self
+//			}
+//
+//		})
 		
     }
 	
@@ -181,7 +193,6 @@ class BlureVC: UIViewController {
 		
 		self.curtainAnimmate(addCurtain: false)
 	}
-	
 	
 	private func aphaAllContentCurtain(alpha: CGFloat?, dissmisKeybord: Bool){
 		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
@@ -220,58 +231,31 @@ class BlureVC: UIViewController {
 
 }
 
-extension BlureVC: UIGestureRecognizerDelegate{
+extension BlureVC: UIGestureRecognizerDelegate {
 	
 	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
 		
-//		if let gesters =
-//
-//		let velocity: CGPoint = gestureRecognizer.velocity(in: SV)
-//
-//		print(velocity)
-		
-		guard let myGesters = self.panGestureRecognizer else {return true}
-//
-		if myGesters.isEqual(gestureRecognizer){
-			
-			if myGesters.location(in: SV).y < 0 {
-				print("жест не в таблице")
-			} else if SV?.contentOffset.y == 0{
-				self.panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer
-				print("нулю офсет равен")
-			} else {
-				print("жест в таблице")
-			}
-			
-//			print(myGesters.location(in: SV).y)
-//			print(myGesters.location(in: self.curtain).y)
-			
+		if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) == false{
+			return true
 		}
-		
-		
-		
-		
-//		if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) == false{
-//			return true
-//		}
-//
-////
-//		if gestureRecognizer.isEqual(SV?.panGestureRecognizer) == false {
-//
-//			if SV?.contentOffset.y != 0 {
-//				return false
-//			}
-//
-//			let velocity: CGPoint = UIPanGestureRecognizer().velocity(in: SV)
-//
-//			print(velocity)
-//			if velocity.y > abs(velocity.x){
-//				return true
-//			}
-//
-//
-//			return true
-//		}
+
+		if gestureRecognizer.isEqual(SV?.panGestureRecognizer) == false {
+
+			if SV?.contentOffset.y != 0 {
+				return false
+			}
+            
+            guard let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer else { return true }
+
+			let velocity: CGPoint = panGestureRecognizer.velocity(in: SV)
+
+			if velocity.y > abs(velocity.x) {
+				return true
+			}
+            
+
+			return false
+		}
 		
 		
 		return true
@@ -330,3 +314,4 @@ extension UIView {
 	}
 	
 }
+

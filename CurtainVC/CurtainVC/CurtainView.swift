@@ -80,7 +80,7 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 	
 	func desingTV(){
 		
-		self.tableView = UITableView(frame: CGRect(x: 0, y: 100, width: wDdevice, height: 500))
+		self.tableView = UITableView(frame: CGRect(x: 0, y: 100, width: wDdevice, height: 200))
 		self.tableView.delegate = self
 		self.tableView.dataSource = self
 		
@@ -110,17 +110,17 @@ extension CurtainView: UIScrollViewDelegate {
 	
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		//		таблица не скрольться в низ
-		scrollView.isScrollEnabled = true
+//		scrollView.isScrollEnabled = true
 //		print("44444") //отпустили
 	}
 	
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
 
-		if (self.lastContentOffset > scrollView.contentOffset.y), scrollView.contentOffset.y < 0.5 {
-			scrollView.isScrollEnabled = false
-		} else {
-		   scrollView.isScrollEnabled = true
-		}
+//		if (self.lastContentOffset > scrollView.contentOffset.y), scrollView.contentOffset.y < 0.5 {
+//			scrollView.isScrollEnabled = false
+//		} else {
+//		   scrollView.isScrollEnabled = true
+//		}
 //
     }
 	
