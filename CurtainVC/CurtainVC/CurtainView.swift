@@ -15,7 +15,7 @@ class CurtainView: UIView {
 	private var scrollViewObj: UIScrollView?
 	
 	var dissmisBlock: () -> () = { }
-	var blockOffsetSV: (CGFloat) -> () = {_ in }
+	var blockOffsetSV: () -> () = { }
 	
 	
 	
@@ -97,23 +97,19 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 extension CurtainView: UIScrollViewDelegate {
 	
 	func scrollViewDidScrollToTop(_ scrollView: UIScrollView) {
-		print("1111")
 	}
 	
 	func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
 //		blockView?.isUserInteractionEnabled = false
-		print("2222") //поставили палец
-		scrollView.isScrollEnabled = true
+//		scrollView.isScrollEnabled = true
 	}
 	
 	func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-		print("3333") //законченна анимация
 	}
 	
 	func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
 		//		таблица не скрольться в низ
-		scrollView.isScrollEnabled = true
-		print("44444") //отпустили
+//		scrollView.isScrollEnabled = true
 	}
 	
 	func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -121,18 +117,15 @@ extension CurtainView: UIScrollViewDelegate {
 		let offset = -1 * scrollView.contentOffset.y
 		
 		if offset > 0{
-			
-			blockOffsetSV(offset)
-//			scrollView.isScrollEnabled = false
+			scrollView.setContentOffset(.zero, animated: false)
+			blockOffsetSV()
 		} else {
 //			scrollView.isScrollEnabled = true
 		}
+		
+//
+//		scrollStartLocation = gesture.translation(in: scrollView)
 
-//		if (self.lastContentOffset > scrollView.contentOffset.y), scrollView.contentOffset.y < 0.5 {
-//			scrollView.isScrollEnabled = false
-//		} else {
-//		   scrollView.isScrollEnabled = true
-//		}
 //
     }
 	

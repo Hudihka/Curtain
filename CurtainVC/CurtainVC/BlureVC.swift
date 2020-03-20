@@ -23,6 +23,7 @@ class BlureVC: UIViewController {
 	
 	
 	var SV: UIScrollView?
+//	var tableViewPanGestureRecognizer: UIPanGestureRecognizer?
 	
 	var enumBlure: EnumBlure = .spiner
 	
@@ -97,10 +98,14 @@ class BlureVC: UIViewController {
 				self.curtainAnimmate(addCurtain: false)
 			}
 			
-//			self.curtain?.blockOffsetSV = { offset in
-//				print(offset)
-//				self.reloadFrameCurtain(translatedPoint: offset)
-//			}
+			self.curtain?.blockOffsetSV = {
+				
+				guard let scrollView = self.curtain else {return}
+				
+//				let point = self.tableViewPanGestureRecognizer?.translation(in: self.view).y
+				
+//				print(point)
+			}
 		}
 		
 		blureView.enumBlureValue = addCurtain ? .max : .min
@@ -138,7 +143,7 @@ class BlureVC: UIViewController {
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
 		panGestureRecognizer.minimumNumberOfTouches = 1
         panGestureRecognizer.cancelsTouchesInView = false
-		panGestureRecognizer.delegate = self
+//		panGestureRecognizer.delegate = self
 
         curtain?.addGestureRecognizer(panGestureRecognizer)
 		
@@ -148,12 +153,12 @@ class BlureVC: UIViewController {
 			if let svView = view as? UIScrollView{
 				self.SV = svView
 				
-				let tableViewPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
-				tableViewPanGestureRecognizer.minimumNumberOfTouches = 1
-				tableViewPanGestureRecognizer.cancelsTouchesInView = false
-				tableViewPanGestureRecognizer.delegate = self
-				
-				self.SV?.addGestureRecognizer(tableViewPanGestureRecognizer)
+//				self.tableViewPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
+//				tableViewPanGestureRecognizer?.minimumNumberOfTouches = 1
+//				tableViewPanGestureRecognizer?.cancelsTouchesInView = false
+////				tableViewPanGestureRecognizer?.delegate = self
+//
+//				self.SV?.addGestureRecognizer(tableViewPanGestureRecognizer!)
 			}
 		})
 		
@@ -230,42 +235,6 @@ class BlureVC: UIViewController {
 		
 	}
 
-}
-
-extension BlureVC: UIGestureRecognizerDelegate {
-	
-	func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-		
-		if gestureRecognizer.isKind(of: UIPanGestureRecognizer.self) == false{
-			print("__________")
-			return true
-		}
-
-		if gestureRecognizer.isEqual(SV?.panGestureRecognizer) == false {
-
-			if SV?.contentOffset.y != 0 {
-				print("---------")
-				return false
-			}
-            
-            guard let panGestureRecognizer = gestureRecognizer as? UIPanGestureRecognizer else { return true }
-
-			let velocity: CGPoint = panGestureRecognizer.velocity(in: SV)
-
-			if velocity.y > abs(velocity.x) {
-				print(")))))))")
-				return true
-			}
-            
-			print("(((())))")
-			return false
-		}
-		
-		print("6666666")
-		return true
-	}
-	
-	
 }
 
 
