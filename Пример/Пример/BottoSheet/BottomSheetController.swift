@@ -41,7 +41,7 @@ open class BottomSheetController: UIViewController {
     
     //using superview bottom inset is recommended default is 0
     open var bottomInset: CGFloat{
-        return 0
+        return 100
     }
     
 	//высота видимой части шторки
@@ -290,4 +290,5 @@ extension BottomSheetController: Pannable{
     }
     
 }
+
 
