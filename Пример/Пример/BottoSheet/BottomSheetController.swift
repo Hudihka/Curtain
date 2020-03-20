@@ -23,51 +23,47 @@ open class BottomSheetController: UIViewController {
     open var initialPosition: SheetPosition{
         return .middle
     }
-    
-    //1 : full height, 0 : minimum height default is 1
-    open var topYPercentage: CGFloat{
-		return 0.75
-    }
-    
-    //1 : full height, 0 : minimum height default is 0.5
-    open var middleYPercentage: CGFloat{
-        return 0.5
-    }
-    
-    //1 : full height, 0 : minimum height default is 0.1
-    open var bottomYPercentage: CGFloat{
-        return 0.1
-    }
-    
-    //using superview bottom inset is recommended default is 0
-    open var bottomInset: CGFloat{
-        return 100
-    }
-    
+	
 	//высота видимой части шторки
 	
 	open var heightCurtain: CGFloat{
         return 500
     }
-	
-	//зазор в верхней части
-	
-    private var topInset: CGFloat {
+    
+    private var topY: CGFloat{
         return hDdevice - heightCurtain
     }
     
-    
-    var topY: CGFloat{
-        return (1 - topYPercentage) * fullHeight + topInset - bottomInset
+	//процент начиная от которого начинаем редактироват блюр и диссмисем
+	//процент от высоты шторки
+	
+    open var procentDissimis: CGFloat{
+		return 0.5
     }
     
+//	точка начиная от которой начинаем дисмисьть и менять альфу
+	
     var middleY: CGFloat{
-        return (1 - middleYPercentage) * fullHeight + topInset - bottomInset
+		return hDdevice - ((1 + procentDissimis) * heightCurtain)
     }
+	
+	private func isDissmis(_ y: CGFloat) -> Bool{
+		return y > middleY
+	}
+	
+	private func alhaKoef(_ y: CGFloat) -> CGFloat{
+		
+		if isDissmis(y) == false {
+			return 1
+		} else {
+			let mid = middleY
+			return (y - mid) / (hDdevice - mid)
+		}
+	}
     
-    var bottomY: CGFloat{
-        return (1 - bottomYPercentage) * fullHeight + topInset - bottomInset
-    }
+//    var bottomY: CGFloat{
+//        return (1 - bottomYPercentage) * fullHeight + topInset - bottomInset
+//    }
     
     var panView: UIView!{
         return view
@@ -78,10 +74,6 @@ open class BottomSheetController: UIViewController {
     var pan: UIPanGestureRecognizer!
     
     var parentView: UIView!
-        
-    var fullHeight: CGFloat{
-        return (parent?.view.frame.height ?? UIScreen.main.bounds.height) - topInset - bottomInset
-    }
     
     var lastOffset: CGPoint = .zero
     var startLocation: CGPoint = .zero
@@ -229,8 +221,6 @@ open class BottomSheetController: UIViewController {
 
         
         if freezeContentOffset && scrollView!.panGestureRecognizer.state == .ended{
-			
-			print("----------")
             scrollView!.setContentOffset(lastOffset, animated: false)
         }
         
