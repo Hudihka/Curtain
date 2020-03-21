@@ -40,6 +40,7 @@ extension UIViewController {
 extension UIView {
 	
 	//поиск вью определенного класса
+//	ub_firstSubView(ofType: UIScrollView.self)
     
     func ub_firstSubView<T: UIView>(ofType type: T.Type) -> T? {
         var resultView: T?

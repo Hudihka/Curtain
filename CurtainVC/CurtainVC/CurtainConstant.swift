@@ -77,7 +77,7 @@ struct CurtainConstant {
 			yDelta = translatedPointY
 			
 		} else {
-			yDelta = -2 * sqrt(abs(translatedPointY))
+			yDelta = -3 * sqrt(abs(translatedPointY))
 		}
 		
 		

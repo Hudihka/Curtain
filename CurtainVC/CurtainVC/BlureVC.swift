@@ -22,7 +22,12 @@ class BlureVC: UIViewController {
 	@IBOutlet weak var spiner: UIActivityIndicatorView!
 	
 	
-	var SV: UIScrollView?
+	private var SV: UIScrollView?
+	private var allView = [UIView]()
+	
+	private var sertchBar: UISearchBar?
+	private var TFArray = [UITextField]()
+	
 //	var tableViewPanGestureRecognizer: UIPanGestureRecognizer?
 	
 	var enumBlure: EnumBlure = .spiner
@@ -140,32 +145,35 @@ class BlureVC: UIViewController {
 
 	
     private func addPanGestures(){
+		
+		guard let curtain = self.curtain else {return}
+		
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
-		panGestureRecognizer.minimumNumberOfTouches = 1
-        panGestureRecognizer.cancelsTouchesInView = false
-//		panGestureRecognizer.delegate = self
-
-        curtain?.addGestureRecognizer(panGestureRecognizer)
+        curtain.addGestureRecognizer(panGestureRecognizer)
 		
-		//если есть скролл вью
-		
-		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			if let svView = view as? UIScrollView{
-				self.SV = svView
-				
-//				self.tableViewPanGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
-//				tableViewPanGestureRecognizer?.minimumNumberOfTouches = 1
-//				tableViewPanGestureRecognizer?.cancelsTouchesInView = false
-////				tableViewPanGestureRecognizer?.delegate = self
-//
-//				self.SV?.addGestureRecognizer(tableViewPanGestureRecognizer!)
-			}
-		})
-		
-		//дисмис клавиатуры
+		//дисмис клавиатуры и всего
 		
 		let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture(sender:)))
         blureView?.addGestureRecognizer(tabGestureRecognizer)
+		
+		self.allView = curtain.recurrenceAllSubviews
+		self.allView.forEach { (view) in
+			if let viewSV = view as? UIScrollView {
+				self.SV = viewSV
+				
+				let panGestureRecognizerSV = UIPanGestureRecognizer(target: self, action: #selector(panGestureSV(sender:)))
+				self.SV.addGestureRecognizer(panGestureRecognizerSV)
+			}
+			
+			if let viewTF = view as? UITextField {
+				self.TFArray.append(viewTF)
+			}
+			
+			if let viewSB = view as? UISearchBar {
+				self.sertchBar = viewSB
+			}
+		}
+
 		
     }
 	
@@ -178,7 +186,7 @@ class BlureVC: UIViewController {
 		
 		let koef = CurtainConstant.koefBlure(newPosition: frame.origin.y)
 		
-		self.aphaAllContentCurtain(alpha: koef, dissmisKeybord: true)
+		self.aphaAllContentCurtain(alpha: koef)
 		self.blureView.blureAt(koef)
 		
 		if sender.state == .ended {
@@ -189,29 +197,29 @@ class BlureVC: UIViewController {
 	}
 	
 	@objc func tapGesture(sender: UIPanGestureRecognizer) {
-		if let array = self.curtain?.recurrenceAllSubviews{
-			for view in array {
-				if view.uiviewTextFirsResponser(){
-					return
-				}
-			}
+		if uiviewTextFirsResponser(){
+			return
 		}
 		
 		self.curtainAnimmate(addCurtain: false)
 	}
 	
-	private func aphaAllContentCurtain(alpha: CGFloat?, dissmisKeybord: Bool){
-		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			
-			if let alpha = alpha {
-				view.alpha = alpha
-			}
-			
-			if dissmisKeybord{
-				view.uiviewTextFirsResponser()
-			}
-			
-		})
+	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
+		
+
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	private func aphaAllContentCurtain(alpha: CGFloat){
+		allView.forEach({$0.alpha = alpha})
+		uiviewTextFirsResponser()
 	}
 	
 	private func finalGestureAnimate(_ dismiss: Bool){
@@ -226,13 +234,29 @@ class BlureVC: UIViewController {
 					   animations: {
 						self.blureView.blureValue()
 						self.curtain?.frame = frame
-						self.aphaAllContentCurtain(alpha: finishAlpha, dissmisKeybord: false)
+						self.aphaAllContentCurtain(alpha: finishAlpha)
 		}) {[weak self] (compl) in
 			if compl, dismiss{
 				self?.dismiss(animated: false, completion: nil)
 			}
 		}
 		
+	}
+	
+	@discardableResult func uiviewTextFirsResponser() -> Bool{
+		
+		if sertchBar?.isFirstResponder ?? false{
+			sertchBar?.resignFirstResponder()
+			return true
+		}
+		
+		
+		if let TF = self.TFArray.first(where: {$0.isFirstResponder}){
+			TF.resignFirstResponder()
+			return true
+		}
+		
+		return false
 	}
 
 }
@@ -254,37 +278,6 @@ extension UIView {
         return all
     }
 	
-	@discardableResult func uiviewTextFirsResponser() -> Bool{
-		
-		if let TF = self as? UITextField, TF.isFirstResponder{
-			TF.resignFirstResponder()
-			return true
-		}
-		
-		
-		if let TV = self as? UITextView, TV.isFirstResponder{
-			TV.resignFirstResponder()
-			return true
-		}
-		
-		
-		return false
-	}
-	
-	var isTFView: Bool{
-		
-		if let _ = self as? UITextField{
-			return true
-		}
-		
-		
-		if let _ = self as? UITextView{
-			return true
-		}
-		
-		
-		return false
-	}
 	
 }
 
