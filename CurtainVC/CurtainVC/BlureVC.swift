@@ -23,6 +23,14 @@ class BlureVC: UIViewController {
 	
 	
 	private var SV: UIScrollView?
+	private var lastOffset: CGPoint = .zero
+	private var startLocation: CGPoint = .zero
+		
+	//	заморозить смещение контента
+	private var freezeContentOffset = false
+	
+	
+	
 	private var allView = [UIView]()
 	
 	private var sertchBar: UISearchBar?
@@ -102,15 +110,6 @@ class BlureVC: UIViewController {
 			self.curtain?.dissmisBlock = {
 				self.curtainAnimmate(addCurtain: false)
 			}
-			
-			self.curtain?.blockOffsetSV = {
-				
-				guard let scrollView = self.curtain else {return}
-				
-//				let point = self.tableViewPanGestureRecognizer?.translation(in: self.view).y
-				
-//				print(point)
-			}
 		}
 		
 		blureView.enumBlureValue = addCurtain ? .max : .min
@@ -162,7 +161,7 @@ class BlureVC: UIViewController {
 				self.SV = viewSV
 				
 				let panGestureRecognizerSV = UIPanGestureRecognizer(target: self, action: #selector(panGestureSV(sender:)))
-				self.SV.addGestureRecognizer(panGestureRecognizerSV)
+				self.SV!.addGestureRecognizer(panGestureRecognizerSV)
 			}
 			
 			if let viewTF = view as? UITextField {
@@ -205,6 +204,8 @@ class BlureVC: UIViewController {
 	}
 	
 	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
+		
+		
 		
 
 		

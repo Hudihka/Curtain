@@ -56,8 +56,6 @@ open class BottomSheetController: UIViewController {
     }
     
     var containerView = UIView()
-
-    var pan: UIPanGestureRecognizer!
     
     var parentView: UIView!
     
