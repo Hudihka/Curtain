@@ -83,7 +83,7 @@ open class BottomSheetController: UIViewController {
     override open func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
         panView.frame = containerView.bounds
-        
+
         if !didLayoutOnce{
             didLayoutOnce = true
             snapTo(position: topY)
@@ -118,69 +118,69 @@ open class BottomSheetController: UIViewController {
     }
 	
     @objc func handleScrollPan(_ recognizer: UIPanGestureRecognizer){
-		let velY = recognizer.velocity(in: self.panView).y
-		
-//		ведем палец в нииз
-//		при условии что таблица немного отскроллена
-		
-        if SV!.contentOffset.y > 0 && velY >= 0{
-            lastOffset = SV!.contentOffset
-            self.startLocation = recognizer.translation(in: self.SV!)
-            return
-        }
-		
-		if recognizer.state == .began{
-			freezeContentOffset = false
-			lastOffset = SV!.contentOffset
-			self.startLocation = recognizer.translation(in: self.SV!)
-		} else if recognizer.state == .changed{
-			
-//			            let dy = recognizer.translation(in: self.SV!).y - startLocation.y
-			            let f = getFrame(for: velY)
-			            topConstraint?.constant = f.minY
-			
-//				print(f.minY)
-			
-			
-			            startLocation = recognizer.translation(in: self.SV!)
-			
-			            if containerView.frame.minY > topY && velY < 0{
-			                freezeContentOffset = true
-			                SV!.setContentOffset(lastOffset, animated: false)
-			            }else{
-			                lastOffset = SV!.contentOffset
-			            }
-			
-			
-			
-			
-		}
-		
+//		let velY = recognizer.velocity(in: self.panView).y
 //
-//        switch recognizer.state {
-//        case .began:
-//            freezeContentOffset = false
+////		ведем палец в нииз
+////		при условии что таблица немного отскроллена
+//
+//        if SV!.contentOffset.y > 0 && velY >= 0{
 //            lastOffset = SV!.contentOffset
 //            self.startLocation = recognizer.translation(in: self.SV!)
-//        case .changed:
-//
-//            let dy = recognizer.translation(in: self.SV!).y - startLocation.y
-//            let f = getFrame(for: dy)
-//            topConstraint?.constant = f.minY
-//
-//            startLocation = recognizer.translation(in: self.SV!)
-//
-//            if containerView.frame.minY > topY && velY < 0{
-//                freezeContentOffset = true
-//                SV!.setContentOffset(lastOffset, animated: false)
-//            }else{
-//                lastOffset = SV!.contentOffset
-//            }
-//        default:
-//
-//			print("------------")
-//			snapTo(position: nextLevel(recognizer: recognizer))
+//            return
 //        }
+//
+//		if recognizer.state == .began{
+//			freezeContentOffset = false
+//			lastOffset = SV!.contentOffset
+//			self.startLocation = recognizer.translation(in: self.SV!)
+//		} else if recognizer.state == .changed{
+//
+////			            let dy = recognizer.translation(in: self.SV!).y - startLocation.y
+//			            let f = getFrame(for: velY)
+//			            topConstraint?.constant = f.minY
+//
+////				print(f.minY)
+//
+//
+//			            startLocation = recognizer.translation(in: self.SV!)
+//
+//			            if containerView.frame.minY > topY && velY < 0{
+//			                freezeContentOffset = true
+//			                SV!.setContentOffset(lastOffset, animated: false)
+//			            }else{
+//			                lastOffset = SV!.contentOffset
+//			            }
+//
+//
+//
+//
+//		}
+//
+////
+////        switch recognizer.state {
+////        case .began:
+////            freezeContentOffset = false
+////            lastOffset = SV!.contentOffset
+////            self.startLocation = recognizer.translation(in: self.SV!)
+////        case .changed:
+////
+////            let dy = recognizer.translation(in: self.SV!).y - startLocation.y
+////            let f = getFrame(for: dy)
+////            topConstraint?.constant = f.minY
+////
+////            startLocation = recognizer.translation(in: self.SV!)
+////
+////            if containerView.frame.minY > topY && velY < 0{
+////                freezeContentOffset = true
+////                SV!.setContentOffset(lastOffset, animated: false)
+////            }else{
+////                lastOffset = SV!.contentOffset
+////            }
+////        default:
+////
+////			print("------------")
+////			snapTo(position: nextLevel(recognizer: recognizer))
+////        }
     }
 //
 //    @objc func handlePan(_ recognizer: UIPanGestureRecognizer){

@@ -77,7 +77,7 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 	
 	func desingTV(){
 		
-		self.tableView = UITableView(frame: CGRect(x: 0, y: 100, width: wDdevice, height: 200))
+		self.tableView = UITableView(frame: CGRect(x: 0, y: 100, width: wDdevice, height: 600))
 		self.tableView.delegate = self
 		self.tableView.dataSource = self
 		

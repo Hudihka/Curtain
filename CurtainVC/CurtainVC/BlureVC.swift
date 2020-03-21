@@ -159,6 +159,8 @@ class BlureVC: UIViewController {
 			if let viewSV = view as? UIScrollView {
 				self.SV = viewSV
 				
+//				SV!.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
+				
 				let panGestureRecognizerSV = UIPanGestureRecognizer(target: self, action: #selector(panGestureSV(sender:)))
 				self.SV!.addGestureRecognizer(panGestureRecognizerSV)
 			}
@@ -179,19 +181,24 @@ class BlureVC: UIViewController {
 		
 		let translatedPoint = sender.translation(in: self.view).y
 		let frame = CurtainConstant.newFrame(translatedPointY: translatedPoint)
-		
-		self.curtain?.frame = frame
-		
-		let koef = CurtainConstant.koefBlure(newPosition: frame.origin.y)
-		
-		self.aphaAllContentCurtain(alpha: koef)
-		self.blureView.blureAt(koef)
+
+		frameFromGestures(frame)
 		
 		if sender.state == .ended {
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
 			self.finalGestureAnimate(dismiss)
 		}
 		
+	}
+	
+	private func frameFromGestures(_ newFrame: CGRect){
+		
+		self.curtain?.frame = newFrame
+		
+		let koef = CurtainConstant.koefBlure(newPosition: newFrame.origin.y)
+		
+		self.aphaAllContentCurtain(alpha: koef)
+		self.blureView.blureAt(koef)
 	}
 	
 	@objc func tapGesture(sender: UIPanGestureRecognizer) {
@@ -205,48 +212,67 @@ class BlureVC: UIViewController {
 	//MARK: GESTURES SV
 	
 	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
-		
+
 		guard let curtain = self.curtain else {return}
+
+		let pointY = sender.translation(in: self.view).y
 		
-		let velY = sender.velocity(in: self.view).y
-		
+		print(pointY)
+//
 		//		ведем палец в нииз
 		//		при условии что таблица немного отскроллена
 		
-		if SV!.contentOffset.y > 0 && velY >= 0{
-			lastOffset = SV!.contentOffset
-			self.startLocation = sender.translation(in: self.SV!)
-			return
+		
+		let frame = CurtainConstant.newFrame(translatedPointY: pointY)
+		
+		if pointY >= 0{
+			frameFromGestures(frame)
+		} else {
+			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
 		}
 		
 		
-		
-		switch sender.state {
-		case .began:
-			freezeContentOffset = false
-			lastOffset = SV!.contentOffset
-			self.startLocation = sender.translation(in: self.SV!)
-		case .changed:
-			
-			let dy = sender.translation(in: self.SV!).y - startLocation.y
-			
-			let frame = CurtainConstant.newFrame(translatedPointY: dy)
-			self.curtain?.frame = frame
-			
-			startLocation = sender.translation(in: self.SV!)
-			
-			if curtain.frame.minY > CurtainConstant.finishFrame.origin.y && velY < 0{
-				freezeContentOffset = true
-				SV!.setContentOffset(lastOffset, animated: false)
-			}else{
-				lastOffset = SV!.contentOffset
-			}
-			
-		default:
-			
-			print("------------")
+		if sender.state == .ended {
+				let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
+				self.finalGestureAnimate(dismiss)
 		}
-		
+//
+//		if SV!.contentOffset.y > 0 && velY >= 0{
+//			lastOffset = SV!.contentOffset
+//			self.startLocation = sender.translation(in: self.SV!)
+//			return
+//		}
+//
+//
+//
+//		switch sender.state {
+//		case .began:
+//			freezeContentOffset = false
+//			lastOffset = SV!.contentOffset
+//			self.startLocation = sender.translation(in: self.SV!)
+//		case .changed:
+//
+//			let dy = sender.translation(in: self.SV!).y - startLocation.y
+//
+//			print(dy)
+//
+//			let frame = CurtainConstant.newFrame(translatedPointY: dy)
+//			self.curtain?.frame = frame
+//
+//			startLocation = sender.translation(in: self.SV!)
+//
+//			if curtain.frame.minY > CurtainConstant.finishFrame.origin.y && velY < 0{
+//				freezeContentOffset = true
+//				SV!.setContentOffset(lastOffset, animated: false)
+//			}else{
+//				lastOffset = SV!.contentOffset
+//			}
+//
+//		default:
+//
+//			print("------------")
+//		}
+//
 	}
 	
     override open func observeValue(forKeyPath keyPath: String?,
