@@ -34,20 +34,20 @@ open class BottomSheetController: UIViewController {
 //	точка начиная от которой начинаем дисмисьть и менять альфу
 	
     var middleY: CGFloat{
-		return hDdevice - ((1 + procentDissimis) * heightCurtain)
+		return hDdevice - (procentDissimis * heightCurtain)
     }
 	
-	private func isDissmis(_ y: CGFloat) -> Bool{
-		return y > middleY
+	private func isDissmis(_ newYPosition: CGFloat) -> Bool{
+		return newYPosition > middleY
 	}
 	
-	private func alhaKoef(_ y: CGFloat) -> CGFloat{
+	private func alhaKoef(_ newYPosition: CGFloat) -> CGFloat{
 		
-		if isDissmis(y) == false {
+		if isDissmis(newYPosition) == false {
 			return 1
 		} else {
 			let mid = middleY
-			return (y - mid) / (hDdevice - mid)
+			return (hDdevice - newYPosition) / (hDdevice - mid)
 		}
 	}
     
@@ -178,8 +178,11 @@ open class BottomSheetController: UIViewController {
     
     private func getFrame(for dy: CGFloat) -> CGRect{
 		
-		let offset = dy > 0 ? dy : -3 * sqrt(abs(dy))
+		let offset 	  = dy > 0 ? dy : -3 * sqrt(abs(dy))
 		let newHeight = heightCurtain - offset
+		let newY 	  = hDdevice - newHeight
+		
+		print("alpha \(alhaKoef(newY))")
 		
 		let f = containerView.frame
 		
