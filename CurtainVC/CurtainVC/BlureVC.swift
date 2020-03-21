@@ -142,7 +142,6 @@ class BlureVC: UIViewController {
 
 	//MARK: gestures
 
-	
     private func addPanGestures(){
 		
 		guard let curtain = self.curtain else {return}
@@ -203,13 +202,63 @@ class BlureVC: UIViewController {
 		self.curtainAnimmate(addCurtain: false)
 	}
 	
+	//MARK: GESTURES SV
+	
 	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
 		
+		guard let curtain = self.curtain else {return}
+		
+		let velY = sender.velocity(in: self.view).y
+		
+		//		ведем палец в нииз
+		//		при условии что таблица немного отскроллена
+		
+		if SV!.contentOffset.y > 0 && velY >= 0{
+			lastOffset = SV!.contentOffset
+			self.startLocation = sender.translation(in: self.SV!)
+			return
+		}
 		
 		
-
+		
+		switch sender.state {
+		case .began:
+			freezeContentOffset = false
+			lastOffset = SV!.contentOffset
+			self.startLocation = sender.translation(in: self.SV!)
+		case .changed:
+			
+			let dy = sender.translation(in: self.SV!).y - startLocation.y
+			
+			let frame = CurtainConstant.newFrame(translatedPointY: dy)
+			self.curtain?.frame = frame
+			
+			startLocation = sender.translation(in: self.SV!)
+			
+			if curtain.frame.minY > CurtainConstant.finishFrame.origin.y && velY < 0{
+				freezeContentOffset = true
+				SV!.setContentOffset(lastOffset, animated: false)
+			}else{
+				lastOffset = SV!.contentOffset
+			}
+			
+		default:
+			
+			print("------------")
+		}
 		
 	}
+	
+    override open func observeValue(forKeyPath keyPath: String?,
+									of object: Any?, change: [NSKeyValueChangeKey : Any]?,
+									context: UnsafeMutableRawPointer?) {
+		
+        if keyPath == #keyPath(UIScrollView.contentOffset) {
+			if let scroll = self.SV, scroll.contentOffset.y < 0{
+                scroll.setContentOffset(.zero, animated: false)
+            }
+        }
+    }
 	
 	
 	
@@ -250,7 +299,6 @@ class BlureVC: UIViewController {
 			sertchBar?.resignFirstResponder()
 			return true
 		}
-		
 		
 		if let TF = self.TFArray.first(where: {$0.isFirstResponder}){
 			TF.resignFirstResponder()
