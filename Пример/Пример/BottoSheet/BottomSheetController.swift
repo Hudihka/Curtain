@@ -8,21 +8,11 @@
 
 import UIKit
 
-
 //проект взят отсюда
 //https://github.com/OfTheWolf/UBottomSheet
 
-public enum SheetPosition{
-    case top, bottom, middle
-}
 
 open class BottomSheetController: UIViewController {
-    
-    // initial positon of the bottom sheet
-    //SheetPosition.top, SheetPosition.middle, SheetPosition.bottom
-    open var initialPosition: SheetPosition{
-        return .middle
-    }
 	
 	//высота видимой части шторки
 	
@@ -60,10 +50,6 @@ open class BottomSheetController: UIViewController {
 			return (y - mid) / (hDdevice - mid)
 		}
 	}
-    
-//    var bottomY: CGFloat{
-//        return (1 - bottomYPercentage) * fullHeight + topInset - bottomInset
-//    }
     
     var panView: UIView!{
         return view
@@ -112,7 +98,7 @@ open class BottomSheetController: UIViewController {
         
         if !didLayoutOnce{
             didLayoutOnce = true
-            snapTo(position: self.initialPosition)
+            snapTo(position: topY)
         }
     }
     
@@ -137,7 +123,7 @@ open class BottomSheetController: UIViewController {
         }
     }
     
-    public func changePosition(to position: SheetPosition){
+    public func changePosition(to position: CGFloat){
         snapTo(position: position)
     }
     
@@ -199,34 +185,24 @@ open class BottomSheetController: UIViewController {
     
     func getFrame(for dy: CGFloat) -> CGRect{
         let f = containerView.frame
-        let minY =  min(max(topY, f.minY + dy), bottomY)
+		//здесь было  min(max(topY, f.minY + dy), bottomY)
+        let minY =  min(max(topY, f.minY + dy), 0)
         let h = f.maxY - minY
         return CGRect(x: f.minX, y: minY, width: f.width, height: h)
     }
     
-    func snapTo(position: SheetPosition){
+    func snapTo(position: CGFloat){
         let f = self.containerView.frame == .zero ? self.view.frame : self.containerView.frame
-        var minY = topY
         
-        switch position {
-        case .top:
-            minY = topY
-        case .middle:
-            minY = middleY
-        case .bottom:
-            minY = bottomY
-        }
-        
-        guard minY != f.minY else{return}
+        guard position != f.minY else{return}
 
-        
         if freezeContentOffset && scrollView!.panGestureRecognizer.state == .ended{
             scrollView!.setContentOffset(lastOffset, animated: false)
         }
         
 
-        let h = f.maxY - minY
-        let rect = CGRect(x: f.minX, y: minY, width: f.width, height: h)
+        let h = f.maxY - position
+        let rect = CGRect(x: f.minX, y: position, width: f.width, height: h)
         self.topConstraint?.constant = rect.minY
         
         animate(animations: {
@@ -237,21 +213,19 @@ open class BottomSheetController: UIViewController {
     open func animate(animations: @escaping () -> Void, completion: ((Bool) -> Void)? = nil){
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.8, options: .curveEaseOut, animations: animations, completion: completion)
     }
+	
+	//конечная позиция
     
-    func nextLevel(recognizer: UIPanGestureRecognizer) -> SheetPosition {
-        let y = self.containerView.frame.minY
+    func nextLevel(recognizer: UIPanGestureRecognizer) -> CGFloat {
+        
         let velY = recognizer.velocity(in: self.view).y
-        if velY < -150{
-            return y > middleY ? .middle : .top
-        }else if velY > 150{
-            return y < (middleY + 1) ? .middle : .bottom
-        }else{
-            if y > middleY {
-                return (y - middleY) < (bottomY - y) ? .middle : .bottom
-            }else{
-                return (y - topY) < (middleY - y) ? .top : .middle
-            }
-        }
+		
+		if velY < 0 {
+			return heightCurtain
+		} else {
+			//если hDevaise то диссмисем
+			return isDissmis(velY + heightCurtain) ? hDdevice : heightCurtain
+		}
     }
 }
 
@@ -270,8 +244,9 @@ extension BottomSheetController: Pannable{
         let bottomConstraint = parent.view.constraints.first { (c) -> Bool in
             c.firstItem as? UIView == self.containerView && c.firstAttribute == .bottom
         }
+		
         
-        bottomConstraint?.constant = -bottomInset
+        bottomConstraint?.constant = 0
     }
     
     public func detach() {
