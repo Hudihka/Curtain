@@ -20,7 +20,7 @@ open class BottomSheetController: UIViewController {
         return 500
     }
     
-    private var topY: CGFloat{
+    private var topY: CGFloat {
         return hDdevice - heightCurtain
     }
     
@@ -65,30 +65,17 @@ open class BottomSheetController: UIViewController {
     var startLocation: CGPoint = .zero
     var freezeContentOffset = false
     
-    //tableview variables
-    var listItems: [Any] = []
-    var headerItems: [Any] = []
     
-    open var scrollView: UIScrollView?{
-        return autoDetectedScrollView
-    }
-    
-    var autoDetectedScrollView: UIScrollView?
-    
+    private var SV: UIScrollView?
     var didLayoutOnce = false
-    
-    func findScrollView(from view: UIView) -> UIView?{
-        return view.ub_firstSubView(ofType: UIScrollView.self)
-    }
-    
-    
     var topConstraint: NSLayoutConstraint?
     
     override open func viewDidLoad() {
         super.viewDidLoad()
         
         setupGestures()
-        addObserver()
+		
+        SV?.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
 
     }
     
@@ -102,109 +89,120 @@ open class BottomSheetController: UIViewController {
         }
     }
     
-    func addObserver(){
-        scrollView?.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
-    }
     
-    func setupGestures(){
-        if autoDetectedScrollView == nil{
-            autoDetectedScrollView = findScrollView(from: self.view) as? UIScrollView
-        }
-        let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-        self.view.addGestureRecognizer(pan)
-        self.scrollView?.panGestureRecognizer.addTarget(self, action: #selector(handleScrollPan(_:)))
-    }
+	func setupGestures(){
+		
+		let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+		self.view.addGestureRecognizer(pan)
+		
+		if SV == nil, let SV = self.view.ub_firstSubView(ofType: UIScrollView.self){
+			//		self.SV = SV
+			//		self.SV?.panGestureRecognizer.addTarget(self, action: #selector(handleScrollPan(_:)))
+		}
+		
+		
+	}
     
-    override open func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+	//жесты скролл вью
+	
+    override open func observeValue(forKeyPath keyPath: String?,
+									of object: Any?, change: [NSKeyValueChangeKey : Any]?,
+									context: UnsafeMutableRawPointer?) {
+		
         if keyPath == #keyPath(UIScrollView.contentOffset) {
-            if let scroll = scrollView, scroll.contentOffset.y < 0{
-                scrollView?.setContentOffset(.zero, animated: false)
+            if let scroll = SV, scroll.contentOffset.y < 0{
+                SV?.setContentOffset(.zero, animated: false)
             }
         }
     }
-    
-    public func changePosition(to position: CGFloat){
-        snapTo(position: position)
-    }
-    
+	
+//    @objc func handleScrollPan(_ recognizer: UIPanGestureRecognizer){
+//        let vel = recognizer.velocity(in: self.panView)
+//
+//		let velY = recognizer.velocity(in: self.view).y
+//
+//		print(velY)
+//
+//
+//
+//        if SV!.contentOffset.y > 0 && vel.y >= 0{
+//            lastOffset = SV!.contentOffset
+//            self.startLocation = recognizer.translation(in: self.SV!)
+//            return
+//        }
+//
+//        switch recognizer.state {
+//        case .began:
+//            freezeContentOffset = false
+//            lastOffset = SV!.contentOffset
+//            self.startLocation = recognizer.translation(in: self.SV!)
+//        case .changed:
+//
+//            let dy = recognizer.translation(in: self.SV!).y - startLocation.y
+//            let f = getFrame(for: dy)
+//            topConstraint?.constant = f.minY
+//
+//            startLocation = recognizer.translation(in: self.SV!)
+//
+//            if containerView.frame.minY > topY && vel.y < 0{
+//                freezeContentOffset = true
+//                SV!.setContentOffset(lastOffset, animated: false)
+//            }else{
+//                lastOffset = SV!.contentOffset
+//            }
+//        default:
+//			snapTo(position: nextLevel(recognizer: recognizer))
+//        }
+//    }
+	
     @objc func handlePan(_ recognizer: UIPanGestureRecognizer){
+		
+		dragView(recognizer)
+		
+		if recognizer.state == .ended {
+//			snapTo(position: nextLevel(recognizer: recognizer))
+		}
         
-        switch recognizer.state {
-        case .began: break
-        case .changed:
-            dragView(recognizer)
-        default:
-            snapTo(position: nextLevel(recognizer: recognizer))
-        }
-        
-    }
-    
-    @objc func handleScrollPan(_ recognizer: UIPanGestureRecognizer){
-        let vel = recognizer.velocity(in: self.panView)
-        
-        if scrollView!.contentOffset.y > 0 && vel.y >= 0{
-            lastOffset = scrollView!.contentOffset
-            self.startLocation = recognizer.translation(in: self.scrollView!)
-            return
-        }
-        
-        switch recognizer.state {
-        case .began:
-            freezeContentOffset = false
-            lastOffset = scrollView!.contentOffset
-            self.startLocation = recognizer.translation(in: self.scrollView!)
-        case .changed:
-			
-//			print("0000000")
-            let dy = recognizer.translation(in: self.scrollView!).y - startLocation.y
-            let f = getFrame(for: dy)
-            topConstraint?.constant = f.minY
-
-            startLocation = recognizer.translation(in: self.scrollView!)
-            
-            if containerView.frame.minY > topY && vel.y < 0{
-//				print("----------")
-                freezeContentOffset = true
-                scrollView!.setContentOffset(lastOffset, animated: false)
-            }else{
-				print("111111111")
-                lastOffset = scrollView!.contentOffset
-            }
-        default:
-            snapTo(position: nextLevel(recognizer: recognizer))
-        }
     }
     
     func dragView(_ recognizer: UIPanGestureRecognizer){
-        let dy = recognizer.translation(in: self.panView).y
-        //        panView.frame = getFrame(for: dy)
-        topConstraint?.constant = getFrame(for: dy).minY
-        
-        recognizer.setTranslation(.zero, in: self.panView)
+        let dy 		 = recognizer.translation(in: self.panView).y
+		let newFrame = getFrame(for: dy)
+		
+		panView.frame = newFrame
+		
+        topConstraint?.constant = newFrame.minY
     }
+	
+	//новый фрейм
     
-    func getFrame(for dy: CGFloat) -> CGRect{
-        let f = containerView.frame
-		//здесь было  min(max(topY, f.minY + dy), bottomY)
-        let minY =  min(max(topY, f.minY + dy), 0)
-        let h = f.maxY - minY
-        return CGRect(x: f.minX, y: minY, width: f.width, height: h)
+    private func getFrame(for dy: CGFloat) -> CGRect{
+		
+		let offset = dy > 0 ? dy : -3 * sqrt(abs(dy))
+		let newHeight = heightCurtain - offset
+		
+		let f = containerView.frame
+		
+        return CGRect(x: f.minX,
+					  y: hDdevice - newHeight,
+					  width: f.width,
+					  height: newHeight)
     }
     
     func snapTo(position: CGFloat){
         let f = self.containerView.frame == .zero ? self.view.frame : self.containerView.frame
-        
+
         guard position != f.minY else{return}
 
-        if freezeContentOffset && scrollView!.panGestureRecognizer.state == .ended{
-            scrollView!.setContentOffset(lastOffset, animated: false)
+        if freezeContentOffset && SV!.panGestureRecognizer.state == .ended{
+            SV!.setContentOffset(lastOffset, animated: false)
         }
         
 
         let h = f.maxY - position
         let rect = CGRect(x: f.minX, y: position, width: f.width, height: h)
         self.topConstraint?.constant = rect.minY
-        
+
         animate(animations: {
             self.parent?.view.layoutIfNeeded()
         }, completion: nil)

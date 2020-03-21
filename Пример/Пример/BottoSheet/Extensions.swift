@@ -38,6 +38,8 @@ extension UIViewController {
 }
 
 extension UIView {
+	
+	//поиск вью определенного класса
     
     func ub_firstSubView<T: UIView>(ofType type: T.Type) -> T? {
         var resultView: T?
