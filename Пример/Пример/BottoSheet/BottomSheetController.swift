@@ -63,6 +63,9 @@ open class BottomSheetController: UIViewController {
     
     var lastOffset: CGPoint = .zero
     var startLocation: CGPoint = .zero
+	
+
+//	заморозить смещение контента
     var freezeContentOffset = false
     
     
@@ -92,12 +95,12 @@ open class BottomSheetController: UIViewController {
     
 	func setupGestures(){
 		
-		let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
-		self.view.addGestureRecognizer(pan)
+//		let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+//		self.view.addGestureRecognizer(pan)
 		
 		if SV == nil, let SV = self.view.ub_firstSubView(ofType: UIScrollView.self){
-			//		self.SV = SV
-			//		self.SV?.panGestureRecognizer.addTarget(self, action: #selector(handleScrollPan(_:)))
+			self.SV = SV
+			self.SV?.panGestureRecognizer.addTarget(self, action: #selector(handleScrollPan(_:)))
 		}
 		
 		
@@ -116,20 +119,45 @@ open class BottomSheetController: UIViewController {
         }
     }
 	
-//    @objc func handleScrollPan(_ recognizer: UIPanGestureRecognizer){
-//        let vel = recognizer.velocity(in: self.panView)
-//
-//		let velY = recognizer.velocity(in: self.view).y
-//
-//		print(velY)
-//
-//
-//
-//        if SV!.contentOffset.y > 0 && vel.y >= 0{
-//            lastOffset = SV!.contentOffset
-//            self.startLocation = recognizer.translation(in: self.SV!)
-//            return
-//        }
+    @objc func handleScrollPan(_ recognizer: UIPanGestureRecognizer){
+		let velY = recognizer.velocity(in: self.panView).y
+		
+//		ведем палец в нииз
+//		при условии что таблица немного отскроллена
+		
+        if SV!.contentOffset.y > 0 && velY >= 0{
+            lastOffset = SV!.contentOffset
+            self.startLocation = recognizer.translation(in: self.SV!)
+            return
+        }
+		
+		if recognizer.state == .began{
+			freezeContentOffset = false
+			lastOffset = SV!.contentOffset
+			self.startLocation = recognizer.translation(in: self.SV!)
+		} else if recognizer.state == .changed{
+			
+//			            let dy = recognizer.translation(in: self.SV!).y - startLocation.y
+			            let f = getFrame(for: velY)
+			            topConstraint?.constant = f.minY
+			
+//				print(f.minY)
+			
+			
+			            startLocation = recognizer.translation(in: self.SV!)
+			
+			            if containerView.frame.minY > topY && velY < 0{
+			                freezeContentOffset = true
+			                SV!.setContentOffset(lastOffset, animated: false)
+			            }else{
+			                lastOffset = SV!.contentOffset
+			            }
+			
+			
+			
+			
+		}
+		
 //
 //        switch recognizer.state {
 //        case .began:
@@ -144,26 +172,28 @@ open class BottomSheetController: UIViewController {
 //
 //            startLocation = recognizer.translation(in: self.SV!)
 //
-//            if containerView.frame.minY > topY && vel.y < 0{
+//            if containerView.frame.minY > topY && velY < 0{
 //                freezeContentOffset = true
 //                SV!.setContentOffset(lastOffset, animated: false)
 //            }else{
 //                lastOffset = SV!.contentOffset
 //            }
 //        default:
+//
+//			print("------------")
 //			snapTo(position: nextLevel(recognizer: recognizer))
 //        }
-//    }
-	
-    @objc func handlePan(_ recognizer: UIPanGestureRecognizer){
-		
-		dragView(recognizer)
-		
-		if recognizer.state == .ended {
-//			snapTo(position: nextLevel(recognizer: recognizer))
-		}
-        
     }
+//
+//    @objc func handlePan(_ recognizer: UIPanGestureRecognizer){
+//
+//		dragView(recognizer)
+//
+//		if recognizer.state == .ended {
+////			snapTo(position: nextLevel(recognizer: recognizer))
+//		}
+//
+//    }
     
     func dragView(_ recognizer: UIPanGestureRecognizer){
         let dy 		 = recognizer.translation(in: self.panView).y
@@ -181,17 +211,19 @@ open class BottomSheetController: UIViewController {
 		let offset 	  = dy > 0 ? dy : -3 * sqrt(abs(dy))
 		let newHeight = heightCurtain - offset
 		let newY 	  = hDdevice - newHeight
-		
-		print("alpha \(alhaKoef(newY))")
+//
+//		print("alpha \(alhaKoef(newY))")
 		
 		let f = containerView.frame
 		
         return CGRect(x: f.minX,
-					  y: hDdevice - newHeight,
+					  y: hDdevice - newY,
 					  width: f.width,
 					  height: newHeight)
     }
     
+	
+	
     func snapTo(position: CGFloat){
         let f = self.containerView.frame == .zero ? self.view.frame : self.containerView.frame
 
