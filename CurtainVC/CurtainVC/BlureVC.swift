@@ -29,15 +29,11 @@ class BlureVC: UIViewController {
 	private var startLocation: CGPoint = .zero
 		
 	//	заморозить смещение контента
-	private var blockUppSV = false
-	private var blockDownSV = false
-	private var scrollPosition: CGFloat = 0
-	
-	private var scrollPositionOld: CGFloat = 0
+	private var frozeSV = false
+	private var oldPositio: CGFloat = 0
 	
 	
 	private var allView = [UIView]()
-	
 	private var sertchBar: UISearchBar?
 	private var TFArray = [UITextField]()
 	
@@ -218,26 +214,26 @@ class BlureVC: UIViewController {
 	
 	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
 		
-		let velY = sender.velocity(in: self.view).y
+//		let velY = sender.velocity(in: self.view).y
 		let pointY = sender.translation(in: self.view).y
 		
 
 		var frame = CGRect()
-//
-		SV!.setContentOffset(CGPoint(x: 0, y: scrollPositionOld - pointY), animated: false)
 		
-		if blockUppSV {
-			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
+//		if sender.state == .began{
+//			scrollPosition = SV!.contentOffset.y
+//		}
+//
+		SV!.setContentOffset(CGPoint(x: 0, y: self.oldPositio - pointY), animated: false)
+		
+		if frozeSV{
+//			frame = CurtainConstant.newFrame(translatedPointY: scrollPosition + pointY)
 			frame = CurtainConstant.newFrame(translatedPointY: pointY)
-			frameFromGestures(frame)
-		} else if blockDownSV {
-			SV!.setContentOffset(CGPoint(x: 0, y: self.scrollPosition - pointY), animated: false)
-			frame = CurtainConstant.newFrame(translatedPointY: scrollPosition + pointY)
 			frameFromGestures(frame)
 		}
 		
 		if sender.state == .ended{
-			self.scrollPositionOld = SV!.contentOffset.y
+			self.oldPositio += pointY
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
 			self.finalGestureAnimate(dismiss)
 		}
@@ -264,30 +260,26 @@ class BlureVC: UIViewController {
 			let offset = scroll.contentOffset.y
 			let height = scroll.frame.size.height
 			
-			self.scrollPosition = scroll.contentSize.height - height
+			print(scroll.contentOffset.y)
 			
-			if offset < 0{
+			if self.oldPositio + offset < 0{
                 scroll.setContentOffset(.zero, animated: false)
-				self.blockUppSV = true
-				self.blockDownSV = false
+				self.frozeSV = true
 				return
             }
-			
-			
+
+
 			let distanceFromBottom = scroll.contentSize.height - offset
-			
+
 			if distanceFromBottom < height {
-				
-				let scrollPosition = CGPoint(x: 0, y: scroll.contentSize.height - height)
-				scroll.setContentOffset(scrollPosition, animated: false)
-				self.blockUppSV = false
-				self.blockDownSV = true
-				
+				let scrollPositionPoint = CGPoint(x: 0, y: scroll.contentSize.height - height)
+				scroll.setContentOffset(scrollPositionPoint, animated: false)
+				self.frozeSV = true
+
 				return
 			}
-			
-			self.blockUppSV = false
-			self.blockDownSV = false
+
+			self.frozeSV = false
 			
         }
     }
