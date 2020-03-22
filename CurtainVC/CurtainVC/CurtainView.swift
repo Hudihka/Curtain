@@ -17,7 +17,7 @@ class CurtainView: UIView {
 	var dissmisBlock: () -> () = { }
 	
 	let dataArray = ["11111", "22222", "33333", "44444", "55555", "66666",
-					 "77777", "88888", "99999", "00000", "10101", "20202"]
+					 "77777", "88888", "99999", "00000", "конец"]
 	var tableView = UITableView()
 	
 	init() {
@@ -77,7 +77,7 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 	
 	func desingTV(){
 		
-		self.tableView = UITableView(frame: CGRect(x: 0, y: 100, width: wDdevice, height: 600))
+		self.tableView = UITableView(frame: CGRect(x: 0, y: 100, width: wDdevice, height: 200))
 		self.tableView.delegate = self
 		self.tableView.dataSource = self
 		

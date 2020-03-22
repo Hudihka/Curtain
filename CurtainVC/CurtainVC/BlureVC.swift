@@ -23,6 +23,8 @@ class BlureVC: UIViewController {
 	
 	
 	private var SV: UIScrollView?
+	
+	
 	private var lastOffset: CGPoint = .zero
 	private var startLocation: CGPoint = .zero
 		
@@ -156,13 +158,13 @@ class BlureVC: UIViewController {
 		
 		self.allView = curtain.recurrenceAllSubviews
 		self.allView.forEach { (view) in
-			if let viewSV = view as? UIScrollView {
+			if let viewSV = view as? UIScrollView, viewSV.isScrollEnabled {
 				self.SV = viewSV
 				
-//				SV!.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
+				SV!.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
 				
-				let panGestureRecognizerSV = UIPanGestureRecognizer(target: self, action: #selector(panGestureSV(sender:)))
-				self.SV!.addGestureRecognizer(panGestureRecognizerSV)
+//				let panGestureRecognizerSV = UIPanGestureRecognizer(target: self, action: #selector(panGestureSV(sender:)))
+//				self.SV!.addGestureRecognizer(panGestureRecognizerSV)
 			}
 			
 			if let viewTF = view as? UITextField {
@@ -213,29 +215,42 @@ class BlureVC: UIViewController {
 	
 	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
 
-		guard let curtain = self.curtain else {return}
-
+//		guard let curtain = self.curtain else {return}
+//
 		let pointY = sender.translation(in: self.view).y
 		
-		print(pointY)
+		SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
+////
+//		//		ведем палец в нииз
+//		//		при условии что таблица немного отскроллена
 //
-		//		ведем палец в нииз
-		//		при условии что таблица немного отскроллена
+//
+//		let frame = CurtainConstant.newFrame(translatedPointY: pointY)
+//
+//		let SVcontent = SV!.contentSize.height
+//		print(pointY)
+//
+////		if isDragAndDrop(pointY){
+////			frameFromGestures(frame)
+////		}
+//
+//		if pointY >= 0{
+//			frameFromGestures(frame)
+//		} else {
+//			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
+//		}
+		
+//		if isDragAndDrop(pointY){
+//			frameFromGestures(frame)
+//		} else {
+//			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
+//		}
 		
 		
-		let frame = CurtainConstant.newFrame(translatedPointY: pointY)
-		
-		if pointY >= 0{
-			frameFromGestures(frame)
-		} else {
-			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
-		}
-		
-		
-		if sender.state == .ended {
-				let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
-				self.finalGestureAnimate(dismiss)
-		}
+//		if sender.state == .ended {
+//				let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
+//				self.finalGestureAnimate(dismiss)
+//		}
 //
 //		if SV!.contentOffset.y > 0 && velY >= 0{
 //			lastOffset = SV!.contentOffset
@@ -275,14 +290,36 @@ class BlureVC: UIViewController {
 //
 	}
 	
+	
+	//переход из крайней позиции скролла таблицы в драг анд дроп шторки
+	
+	private func isDragAndDrop(_ tarnslateY: CGFloat) -> Bool{
+		let minValue = min(SV!.frame.height, SV!.contentSize.height)
+		
+		return minValue > abs(tarnslateY)
+	}
+	
     override open func observeValue(forKeyPath keyPath: String?,
 									of object: Any?, change: [NSKeyValueChangeKey : Any]?,
 									context: UnsafeMutableRawPointer?) {
 		
-        if keyPath == #keyPath(UIScrollView.contentOffset) {
-			if let scroll = self.SV, scroll.contentOffset.y < 0{
+        if keyPath == #keyPath(UIScrollView.contentOffset), let scroll = self.SV {
+			
+			let offset = scroll.contentOffset.y
+			
+			if offset < 0{
                 scroll.setContentOffset(.zero, animated: false)
+				return
             }
+			
+			
+			let height = scroll.frame.size.height
+			let distanceFromBottom = scroll.contentSize.height - offset
+			if distanceFromBottom < height {
+				let scrollPosition = CGPoint(x: 0, y: scroll.contentSize.height - height)
+				scroll.setContentOffset(scrollPosition, animated: false)
+			}
+			
         }
     }
 	
