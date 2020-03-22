@@ -29,8 +29,9 @@ class BlureVC: UIViewController {
 	private var startLocation: CGPoint = .zero
 		
 	//	заморозить смещение контента
-	private var freezeContentOffset = false
-	
+	private var blockUppSV = false
+	private var blockDownSV = false
+	private var translateScroll: CGFloat = 0
 	
 	
 	private var allView = [UIView]()
@@ -163,8 +164,8 @@ class BlureVC: UIViewController {
 				
 				SV!.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
 				
-//				let panGestureRecognizerSV = UIPanGestureRecognizer(target: self, action: #selector(panGestureSV(sender:)))
-//				self.SV!.addGestureRecognizer(panGestureRecognizerSV)
+				let panGestureRecognizerSV = UIPanGestureRecognizer(target: self, action: #selector(panGestureSV(sender:)))
+				self.SV!.addGestureRecognizer(panGestureRecognizerSV)
 			}
 			
 			if let viewTF = view as? UITextField {
@@ -218,8 +219,16 @@ class BlureVC: UIViewController {
 //		guard let curtain = self.curtain else {return}
 //
 		let pointY = sender.translation(in: self.view).y
-		
+
 		SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
+		
+		if blockUppSV {
+			let frame = CurtainConstant.newFrame(translatedPointY: pointY)
+			frameFromGestures(frame)
+		} else if blockDownSV {
+			let frame = CurtainConstant.newFrame(translatedPointY: translateScroll + pointY)
+			frameFromGestures(frame)
+		}
 ////
 //		//		ведем палец в нииз
 //		//		при условии что таблица немного отскроллена
@@ -309,6 +318,8 @@ class BlureVC: UIViewController {
 			
 			if offset < 0{
                 scroll.setContentOffset(.zero, animated: false)
+				self.blockUppSV = true
+				self.blockDownSV = false
 				return
             }
 			
@@ -316,9 +327,18 @@ class BlureVC: UIViewController {
 			let height = scroll.frame.size.height
 			let distanceFromBottom = scroll.contentSize.height - offset
 			if distanceFromBottom < height {
+				
+				self.translateScroll = scroll.contentSize.height - height
 				let scrollPosition = CGPoint(x: 0, y: scroll.contentSize.height - height)
 				scroll.setContentOffset(scrollPosition, animated: false)
+				self.blockUppSV = false
+				self.blockDownSV = true
+				
+				return
 			}
+			
+			self.blockUppSV = false
+			self.blockDownSV = false
 			
         }
     }
