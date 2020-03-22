@@ -24,13 +24,13 @@ class BlureVC: UIViewController {
 	
 	private var SV: UIScrollView?
 	
-	
-	private var lastOffset: CGPoint = .zero
-	private var startLocation: CGPoint = .zero
 		
 	//	заморозить смещение контента
 	private var frozeSV = false
-	private var oldPositio: CGFloat = 0
+	private var startRelod = false
+	
+	private var startLocation: CGFloat = 0
+	private var startPositionFronz: CGFloat = 0
 	
 	
 	private var allView = [UIView]()
@@ -220,25 +220,34 @@ class BlureVC: UIViewController {
 
 		var frame = CGRect()
 		
-//		if sender.state == .began{
-//			scrollPosition = SV!.contentOffset.y
-//		}
-//
-		SV!.setContentOffset(CGPoint(x: 0, y: self.oldPositio - pointY), animated: false)
+		switch sender.state {
+		case .began:
+			startLocation = SV!.contentOffset.y
+			startRelod = frozeSV
+		case .changed:
 		
-		if frozeSV{
-//			frame = CurtainConstant.newFrame(translatedPointY: scrollPosition + pointY)
-			frame = CurtainConstant.newFrame(translatedPointY: pointY)
-			frameFromGestures(frame)
-		}
-		
-		if sender.state == .ended{
-			self.oldPositio += pointY
+			SV!.setContentOffset(CGPoint(x: 0, y: startLocation - pointY), animated: false)
+			
+			//ситуация когда начали движение сразу в вверх
+			//или сразу в низ из замороженного состояния
+			print("-------")
+			
+			if startRelod == frozeSV, frozeSV{
+				frame = CurtainConstant.newFrame(translatedPointY: pointY)
+				frameFromGestures(frame)
+				print("1111111")
+			} else if startRelod != frozeSV{
+				print("0000000")
+//				frame = CurtainConstant.newFrame(translatedPointY:  startLocation + pointY)
+//				frameFromGestures(frame)
+			}
+			
+		default:
+			startRelod = false
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
 			self.finalGestureAnimate(dismiss)
 		}
 		
-
 
 	}
 	
@@ -260,10 +269,10 @@ class BlureVC: UIViewController {
 			let offset = scroll.contentOffset.y
 			let height = scroll.frame.size.height
 			
-			print(scroll.contentOffset.y)
 			
-			if self.oldPositio + offset < 0{
+			if offset < 0{
                 scroll.setContentOffset(.zero, animated: false)
+				
 				self.frozeSV = true
 				return
             }

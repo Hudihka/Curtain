@@ -16,8 +16,7 @@ class CurtainView: UIView {
 	
 	var dissmisBlock: () -> () = { }
 	
-	let dataArray = ["11111", "22222", "33333", "44444", "55555", "66666",
-					 "77777", "88888", "99999", "00000", "конец"]
+	let dataArray = ["11111", "22222", "33333", "44444", "55555", "66666", "конец"]
 	var tableView = UITableView()
 	
 	init() {
