@@ -33,6 +33,8 @@ class BlureVC: UIViewController {
 	private var blockDownSV = false
 	private var scrollPosition: CGFloat = 0
 	
+	private var scrollPositionOld: CGFloat = 0
+	
 	
 	private var allView = [UIView]()
 	
@@ -221,18 +223,21 @@ class BlureVC: UIViewController {
 		
 
 		var frame = CGRect()
+//
+		SV!.setContentOffset(CGPoint(x: 0, y: scrollPositionOld - pointY), animated: false)
 		
 		if blockUppSV {
+			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
 			frame = CurtainConstant.newFrame(translatedPointY: pointY)
 			frameFromGestures(frame)
 		} else if blockDownSV {
+			SV!.setContentOffset(CGPoint(x: 0, y: self.scrollPosition - pointY), animated: false)
 			frame = CurtainConstant.newFrame(translatedPointY: scrollPosition + pointY)
 			frameFromGestures(frame)
-		} else {
-			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
 		}
 		
 		if sender.state == .ended{
+			self.scrollPositionOld = SV!.contentOffset.y
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
 			self.finalGestureAnimate(dismiss)
 		}

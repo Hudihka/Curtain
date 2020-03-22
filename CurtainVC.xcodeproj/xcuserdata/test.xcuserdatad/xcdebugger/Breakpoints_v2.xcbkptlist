@@ -7,15 +7,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "894D42A2-8E18-4C67-B0F1-E45CB94466C9"
-            shouldBeEnabled = "Yes"
+            uuid = "35A834BF-4635-4B1F-8DFA-3B177725D61B"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "CurtainVC/CurtainVC/BlureVC.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "229"
-            endingLineNumber = "229"
+            startingLineNumber = "240"
+            endingLineNumber = "240"
             landmarkName = "panGestureSV(sender:)"
             landmarkType = "7">
          </BreakpointContent>
