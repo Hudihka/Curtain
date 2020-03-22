@@ -31,7 +31,7 @@ class BlureVC: UIViewController {
 	//	заморозить смещение контента
 	private var blockUppSV = false
 	private var blockDownSV = false
-	private var translateScroll: CGFloat = 0
+	private var scrollPosition: CGFloat = 0
 	
 	
 	private var allView = [UIView]()
@@ -215,88 +215,30 @@ class BlureVC: UIViewController {
 	//MARK: GESTURES SV
 	
 	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
-
-//		guard let curtain = self.curtain else {return}
-//
+		
+		let velY = sender.velocity(in: self.view).y
 		let pointY = sender.translation(in: self.view).y
+		
 
-		SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
+		var frame = CGRect()
 		
 		if blockUppSV {
-			let frame = CurtainConstant.newFrame(translatedPointY: pointY)
+			frame = CurtainConstant.newFrame(translatedPointY: pointY)
 			frameFromGestures(frame)
 		} else if blockDownSV {
-			let frame = CurtainConstant.newFrame(translatedPointY: translateScroll + pointY)
+			frame = CurtainConstant.newFrame(translatedPointY: scrollPosition + pointY)
 			frameFromGestures(frame)
+		} else {
+			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
 		}
-////
-//		//		ведем палец в нииз
-//		//		при условии что таблица немного отскроллена
-//
-//
-//		let frame = CurtainConstant.newFrame(translatedPointY: pointY)
-//
-//		let SVcontent = SV!.contentSize.height
-//		print(pointY)
-//
-////		if isDragAndDrop(pointY){
-////			frameFromGestures(frame)
-////		}
-//
-//		if pointY >= 0{
-//			frameFromGestures(frame)
-//		} else {
-//			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
-//		}
 		
-//		if isDragAndDrop(pointY){
-//			frameFromGestures(frame)
-//		} else {
-//			SV!.setContentOffset(CGPoint(x: 0, y: -1 * pointY), animated: false)
-//		}
+		if sender.state == .ended{
+			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
+			self.finalGestureAnimate(dismiss)
+		}
 		
-		
-//		if sender.state == .ended {
-//				let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
-//				self.finalGestureAnimate(dismiss)
-//		}
-//
-//		if SV!.contentOffset.y > 0 && velY >= 0{
-//			lastOffset = SV!.contentOffset
-//			self.startLocation = sender.translation(in: self.SV!)
-//			return
-//		}
-//
-//
-//
-//		switch sender.state {
-//		case .began:
-//			freezeContentOffset = false
-//			lastOffset = SV!.contentOffset
-//			self.startLocation = sender.translation(in: self.SV!)
-//		case .changed:
-//
-//			let dy = sender.translation(in: self.SV!).y - startLocation.y
-//
-//			print(dy)
-//
-//			let frame = CurtainConstant.newFrame(translatedPointY: dy)
-//			self.curtain?.frame = frame
-//
-//			startLocation = sender.translation(in: self.SV!)
-//
-//			if curtain.frame.minY > CurtainConstant.finishFrame.origin.y && velY < 0{
-//				freezeContentOffset = true
-//				SV!.setContentOffset(lastOffset, animated: false)
-//			}else{
-//				lastOffset = SV!.contentOffset
-//			}
-//
-//		default:
-//
-//			print("------------")
-//		}
-//
+
+
 	}
 	
 	
@@ -315,6 +257,9 @@ class BlureVC: UIViewController {
         if keyPath == #keyPath(UIScrollView.contentOffset), let scroll = self.SV {
 			
 			let offset = scroll.contentOffset.y
+			let height = scroll.frame.size.height
+			
+			self.scrollPosition = scroll.contentSize.height - height
 			
 			if offset < 0{
                 scroll.setContentOffset(.zero, animated: false)
@@ -324,11 +269,10 @@ class BlureVC: UIViewController {
             }
 			
 			
-			let height = scroll.frame.size.height
 			let distanceFromBottom = scroll.contentSize.height - offset
+			
 			if distanceFromBottom < height {
 				
-				self.translateScroll = scroll.contentSize.height - height
 				let scrollPosition = CGPoint(x: 0, y: scroll.contentSize.height - height)
 				scroll.setContentOffset(scrollPosition, animated: false)
 				self.blockUppSV = false
