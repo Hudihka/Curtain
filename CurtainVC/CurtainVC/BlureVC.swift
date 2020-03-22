@@ -223,27 +223,29 @@ class BlureVC: UIViewController {
 		switch sender.state {
 		case .began:
 			startLocation = SV!.contentOffset.y
-			startRelod = frozeSV
 		case .changed:
 		
 			SV!.setContentOffset(CGPoint(x: 0, y: startLocation - pointY), animated: false)
 			
-			//ситуация когда начали движение сразу в вверх
-			//или сразу в низ из замороженного состояния
-			print("-------")
 			
-			if startRelod == frozeSV, frozeSV{
-				frame = CurtainConstant.newFrame(translatedPointY: pointY)
+			if frozeSV {
+				let delta = startLocation + pointY
+				
+				frame = CurtainConstant.newFrame(translatedPointY: delta)
 				frameFromGestures(frame)
-				print("1111111")
-			} else if startRelod != frozeSV{
-				print("0000000")
-//				frame = CurtainConstant.newFrame(translatedPointY:  startLocation + pointY)
-//				frameFromGestures(frame)
 			}
+//
+//			if startRelod == frozeSV, frozeSV{
+//				frame = CurtainConstant.newFrame(translatedPointY: pointY)
+//				frameFromGestures(frame)
+//				print("1111111")
+//			} else if startRelod != frozeSV{
+//				print("0000000")
+////				frame = CurtainConstant.newFrame(translatedPointY:  startLocation + pointY)
+////				frameFromGestures(frame)
+//			}
 			
 		default:
-			startRelod = false
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
 			self.finalGestureAnimate(dismiss)
 		}
@@ -270,7 +272,8 @@ class BlureVC: UIViewController {
 			let height = scroll.frame.size.height
 			
 			
-			if offset < 0{
+			if offset <= 0{
+				
                 scroll.setContentOffset(.zero, animated: false)
 				
 				self.frozeSV = true
@@ -280,13 +283,15 @@ class BlureVC: UIViewController {
 
 			let distanceFromBottom = scroll.contentSize.height - offset
 
-			if distanceFromBottom < height {
+			if distanceFromBottom <= height {
 				let scrollPositionPoint = CGPoint(x: 0, y: scroll.contentSize.height - height)
 				scroll.setContentOffset(scrollPositionPoint, animated: false)
 				self.frozeSV = true
 
 				return
 			}
+			
+			print("отмена блокировки")
 
 			self.frozeSV = false
 			
