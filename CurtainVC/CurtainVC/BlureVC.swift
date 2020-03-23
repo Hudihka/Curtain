@@ -226,24 +226,17 @@ class BlureVC: UIViewController {
 		case .changed:
 		
 			SV!.setContentOffset(CGPoint(x: 0, y: startLocation - pointY), animated: false)
-			
+		
 			
 			if frozeSV {
-				let delta = startLocation + pointY
-				
+				let delta = -1 * (startPositionFronz - pointY)
+			
 				frame = CurtainConstant.newFrame(translatedPointY: delta)
 				frameFromGestures(frame)
+			} else {
+				startPositionFronz = pointY
 			}
-//
-//			if startRelod == frozeSV, frozeSV{
-//				frame = CurtainConstant.newFrame(translatedPointY: pointY)
-//				frameFromGestures(frame)
-//				print("1111111")
-//			} else if startRelod != frozeSV{
-//				print("0000000")
-////				frame = CurtainConstant.newFrame(translatedPointY:  startLocation + pointY)
-////				frameFromGestures(frame)
-//			}
+
 			
 		default:
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
@@ -290,8 +283,6 @@ class BlureVC: UIViewController {
 
 				return
 			}
-			
-			print("отмена блокировки")
 
 			self.frozeSV = false
 			
