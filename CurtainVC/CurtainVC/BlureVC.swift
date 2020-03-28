@@ -157,6 +157,8 @@ class BlureVC: UIViewController {
 		self.allView.forEach { (view) in
 			if let viewSV = view as? UIScrollView, viewSV.isScrollEnabled {
 				self.SV = viewSV
+				self.SV?.showsHorizontalScrollIndicator = false
+				self.SV?.showsVerticalScrollIndicator = true
 				
 				SV!.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
 				
