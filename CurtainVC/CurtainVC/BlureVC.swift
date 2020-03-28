@@ -208,9 +208,6 @@ class BlureVC: UIViewController {
 //		let velY = sender.velocity(in: self.view).y
 		let pointY = sender.translation(in: self.view).y
 		
-		print("-------------------------")
-		print(pointY)
-		
 
 		var frame = CGRect()
 		
