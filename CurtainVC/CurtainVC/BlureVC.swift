@@ -21,6 +21,25 @@ class BlureVC: UIViewController {
 	@IBOutlet weak var blureView: VisualEffectView!
 	@IBOutlet weak var spiner: UIActivityIndicatorView!
 	
+	
+	private var SV: UIScrollView?
+	
+		
+	//	заморозить смещение контента
+	private var frozeSV = false
+	private var startRelod = false
+	
+	private var startPositionFronz: CGFloat = 0
+	private var velositu: CGFloat = 0
+	
+	
+	private var allView = [UIView]()
+	private var sertchBar: UISearchBar?
+	private var TFArray = [UITextField]()
+
+	
+//	var tableViewPanGestureRecognizer: UIPanGestureRecognizer?
+	
 	var enumBlure: EnumBlure = .spiner
 	
 	var curtain: CurtainView?
@@ -52,14 +71,16 @@ class BlureVC: UIViewController {
 		UIApplication.shared.workVC.present(VC, animated: false, completion: nil)
     }
 	
-	//только для сппинера
-	
 	static func dismissBlure(completion: (() -> Void)?) {
 		
-		if let VC = UIApplication.shared.workVC as? BlureVC, VC.enumBlure == .spiner{
-			VC.dismiss(animated: false, completion: completion)
+		if let VC = UIApplication.shared.workVC as? BlureVC {
+			if VC.enumBlure == .spiner{
+				VC.dismiss(animated: false, completion: completion)
+			} else {
+				VC.curtainAnimmate(addCurtain: false, completionDissmis: completion)
+			}
 		}
-    }
+	}
 
 
     override func viewWillAppear(_ animated: Bool) {
@@ -81,7 +102,7 @@ class BlureVC: UIViewController {
 		}
 	}
 	
-	private func curtainAnimmate(addCurtain: Bool){
+	private func curtainAnimmate(addCurtain: Bool, completionDissmis: (() -> Void)? = nil){
 		
 		guard let curtain = curtain else {return}
 		
@@ -112,7 +133,7 @@ class BlureVC: UIViewController {
 				if addCurtain {
 					self?.addPanGestures()
 				} else {
-					self?.dismiss(animated: false, completion: nil)
+					self?.dismiss(animated: false, completion: completionDissmis)
 				}
 			}
 			
@@ -123,27 +144,46 @@ class BlureVC: UIViewController {
 
 	//MARK: gestures
 
-	
     private func addPanGestures(){
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
-        panGestureRecognizer.minimumNumberOfTouches = 1
-
-        curtain?.addGestureRecognizer(panGestureRecognizer)
+		
+		guard let curtain = self.curtain else {return}
+		
+		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
+        curtain.addGestureRecognizer(panGestureRecognizer)
 		
 		let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture(sender:)))
         blureView?.addGestureRecognizer(tabGestureRecognizer)
 		
-		//жест при тапе по шторки убираем клавиатуру
+		self.allView = curtain.recurrenceAllSubviews
 		
-		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			if view.isTFView{
-				let tabGestureRecognizerCurtain = UITapGestureRecognizer(target: self, action: #selector(tapGestureCurtain(sender:)))
-				curtain?.addGestureRecognizer(tabGestureRecognizerCurtain)
-				tabGestureRecognizerCurtain.require(toFail: panGestureRecognizer)
+		
+		
+		self.allView.forEach { (view) in
+			if let viewSV = view as? UIScrollView, viewSV.isScrollEnabled {
+				self.SV = viewSV
+				self.SV?.showsHorizontalScrollIndicator = false
+				self.SV?.showsVerticalScrollIndicator = true
 				
-				return
+				SV!.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
+				
+				
+				let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+				self.view.addGestureRecognizer(pan)
+				
+				self.SV?.panGestureRecognizer.addTarget(self, action: #selector(panGestureSV(sender:)))
 			}
-		})
+			
+			if let viewTF = view as? UITextField {
+				self.TFArray.append(viewTF)
+			}
+			
+			if let viewSB = view as? UISearchBar {
+				self.sertchBar = viewSB
+			}
+
+			
+		}
+
 		
     }
 	
@@ -151,13 +191,8 @@ class BlureVC: UIViewController {
 		
 		let translatedPoint = sender.translation(in: self.view).y
 		let frame = CurtainConstant.newFrame(translatedPointY: translatedPoint)
-		
-		self.curtain?.frame = frame
-		
-		let koef = CurtainConstant.koefBlure(newPosition: frame.origin.y)
-		
-		self.aphaAllContentCurtain(alpha: koef, dissmisKeybord: true)
-		self.blureView.blureAt(koef)
+
+		frameFromGestures(frame)
 		
 		if sender.state == .ended {
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
@@ -166,54 +201,139 @@ class BlureVC: UIViewController {
 		
 	}
 	
+	private func frameFromGestures(_ newFrame: CGRect){
+		
+		self.curtain?.frame = newFrame
+		
+		let koef = CurtainConstant.koefBlure(newPosition: newFrame.origin.y)
+		
+		self.aphaAllContentCurtain(alpha: koef)
+		self.blureView.blureAt(koef)
+	}
+	
 	@objc func tapGesture(sender: UIPanGestureRecognizer) {
-		if let array = self.curtain?.recurrenceAllSubviews{
-			for view in array {
-				if view.uiviewTextFirsResponser(){
-					return
-				}
-			}
+		if uiviewTextFirsResponser(){
+			return
 		}
 		
-		self.finalGestureAnimate(true)
+		self.curtainAnimmate(addCurtain: false)
 	}
 	
-	@objc func tapGestureCurtain(sender: UIPanGestureRecognizer) {
+	//MARK: GESTURES SV
+	
+	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
 		
-		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			if view.uiviewTextFirsResponser(){
+		let velY = sender.velocity(in: self.view).y
+		let pointY = sender.translation(in: self.curtain).y
+		
+		print(pointY)
+		
+
+		var frame = CGRect()
+		
+		switch sender.state {
+		case .began:
+			velositu = 0
+			startPositionFronz = 0
+		case .changed:
+		
+			if frozeSV {
+				let delta = -1 * (startPositionFronz - pointY)
+				
+				frame = CurtainConstant.newFrame(translatedPointY: delta)
+				frameFromGestures(frame)
+			} else {
+				startPositionFronz = pointY
+			}
+
+			
+		default:
+			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
+			self.finalGestureAnimate(dismiss)
+			
+			//что бы не было пустых срабатываний
+			
+			if SV!.contentOffset.y > 10 {
+				velositu = velY
+			}
+		}
+	}
+	
+    @objc func handlePan(_ recognizer: UIPanGestureRecognizer){}
+	
+	
+    override open func observeValue(forKeyPath keyPath: String?,
+									of object: Any?, change: [NSKeyValueChangeKey : Any]?,
+									context: UnsafeMutableRawPointer?) {
+		
+        if keyPath == #keyPath(UIScrollView.contentOffset), let scroll = self.SV {
+			
+			let offset = scroll.contentOffset.y
+			let height = scroll.frame.size.height
+			
+			
+			if offset <= 0{
+				
+                scroll.setContentOffset(.zero, animated: false)
+				
+				self.frozeSV = true
+				
+				/*
+				чем выше это значение, тем сильнее надо проскролить
+				таблицу что бы ушла шторка
+				*/
+				
+				if velositu > 1200{
+					let time: TimeInterval = velositu > 1600 ?	 smallWayTimeInterval : 0.3
+					
+					velositu = 0
+					self.finalGestureAnimate(true, time: time)
+					
+					return
+				}
+				
+				
+				return
+            }
+
+
+			let distanceFromBottom = scroll.contentSize.height - offset
+
+			if distanceFromBottom <= height {
+				let scrollPositionPoint = CGPoint(x: 0, y: scroll.contentSize.height - height)
+				scroll.setContentOffset(scrollPositionPoint, animated: false)
+				self.frozeSV = true
+
 				return
 			}
-		})
+
+			self.frozeSV = false
+			
+        }
+    }
+	
+	
+	private func aphaAllContentCurtain(alpha: CGFloat){
+		allView.forEach({$0.alpha = alpha})
+		uiviewTextFirsResponser()
 	}
 	
-	private func aphaAllContentCurtain(alpha: CGFloat?, dissmisKeybord: Bool){
-		self.curtain?.recurrenceAllSubviews.forEach({ (view) in
-			
-			if let alpha = alpha {
-				view.alpha = alpha
-			}
-			
-			if dissmisKeybord{
-				view.uiviewTextFirsResponser()
-			}
-			
-		})
-	}
-	
-	private func finalGestureAnimate(_ dismiss: Bool){
+	private func finalGestureAnimate(_ dismiss: Bool,
+									 time: TimeInterval = smallWayTimeInterval){
 		
 		blureView.enumBlureValue = dismiss ? .min : .max
 		let finishAlpha: CGFloat = dismiss ? 0 : 1
 		let frame = dismiss ?  CurtainConstant.startFrame : CurtainConstant.finishFrame
 		
-		UIView.animate(withDuration: smallWayTimeInterval,
+		
+		
+		UIView.animate(withDuration: time,
 					   delay: 0,
 					   options: [.curveEaseOut],
 					   animations: {
 						self.blureView.blureValue()
 						self.curtain?.frame = frame
-						self.aphaAllContentCurtain(alpha: finishAlpha, dissmisKeybord: false)
+						self.aphaAllContentCurtain(alpha: finishAlpha)
 		}) {[weak self] (compl) in
 			if compl, dismiss{
 				self?.dismiss(animated: false, completion: nil)
@@ -221,6 +341,23 @@ class BlureVC: UIViewController {
 		}
 		
 	}
+	
+	
+	@discardableResult func uiviewTextFirsResponser() -> Bool{
+		
+		if sertchBar?.isFirstResponder ?? false{
+			sertchBar?.resignFirstResponder()
+			return true
+		}
+		
+		if let TF = self.TFArray.first(where: {$0.isFirstResponder}){
+			TF.resignFirstResponder()
+			return true
+		}
+		
+		return false
+	}
+
 
 }
 
@@ -241,36 +378,6 @@ extension UIView {
         return all
     }
 	
-	@discardableResult func uiviewTextFirsResponser() -> Bool{
-		
-		if let TF = self as? UITextField, TF.isFirstResponder{
-			TF.resignFirstResponder()
-			return true
-		}
-		
-		
-		if let TV = self as? UITextView, TV.isFirstResponder{
-			TV.resignFirstResponder()
-			return true
-		}
-		
-		
-		return false
-	}
-	
-	var isTFView: Bool{
-		
-		if let _ = self as? UITextField{
-			return true
-		}
-		
-		
-		if let _ = self as? UITextView{
-			return true
-		}
-		
-		
-		return false
-	}
 	
 }
+
