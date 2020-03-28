@@ -194,7 +194,6 @@ class BlureVC: UIViewController {
 	}
 	
 	@objc func tapGesture(sender: UIPanGestureRecognizer) {
-		
 		if view.endEditing(true){
 			return
 		}
@@ -209,12 +208,16 @@ class BlureVC: UIViewController {
 //		let velY = sender.velocity(in: self.view).y
 		let pointY = sender.translation(in: self.view).y
 		
+		print("-------------------------")
+		print(pointY)
+		
 
 		var frame = CGRect()
 		
 		switch sender.state {
 		case .began:
 			startLocation = SV!.contentOffset.y
+			startPositionFronz = 0
 		case .changed:
 		
 			SV!.setContentOffset(CGPoint(x: 0, y: startLocation - pointY), animated: false)
@@ -222,7 +225,9 @@ class BlureVC: UIViewController {
 			
 			if frozeSV {
 				let delta = -1 * (startPositionFronz - pointY)
-			
+				
+				
+
 				frame = CurtainConstant.newFrame(translatedPointY: delta)
 				frameFromGestures(frame)
 			} else {
@@ -290,7 +295,7 @@ class BlureVC: UIViewController {
 	
 	private func aphaAllContentCurtain(alpha: CGFloat){
 		allView.forEach({$0.alpha = alpha})
-		uiviewTextFirsResponser()
+		view.endEditing(true)
 	}
 	
 	private func finalGestureAnimate(_ dismiss: Bool){
