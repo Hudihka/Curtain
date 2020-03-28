@@ -34,6 +34,9 @@ class BlureVC: UIViewController {
 	
 	
 	private var allView = [UIView]()
+	private var sertchBar: UISearchBar?
+	private var TFArray = [UITextField]()
+
 	
 //	var tableViewPanGestureRecognizer: UIPanGestureRecognizer?
 	
@@ -167,8 +170,16 @@ class BlureVC: UIViewController {
 				self.view.addGestureRecognizer(pan)
 				
 				self.SV?.panGestureRecognizer.addTarget(self, action: #selector(panGestureSV(sender:)))
-
 			}
+			
+			if let viewTF = view as? UITextField {
+				self.TFArray.append(viewTF)
+			}
+			
+			if let viewSB = view as? UISearchBar {
+				self.sertchBar = viewSB
+			}
+
 			
 		}
 
@@ -200,7 +211,7 @@ class BlureVC: UIViewController {
 	}
 	
 	@objc func tapGesture(sender: UIPanGestureRecognizer) {
-		if view.endEditing(true){
+		if uiviewTextFirsResponser(){
 			return
 		}
 		
@@ -289,15 +300,9 @@ class BlureVC: UIViewController {
     }
 	
 	
-	
-	
-	
-	
-	
-	
 	private func aphaAllContentCurtain(alpha: CGFloat){
 		allView.forEach({$0.alpha = alpha})
-		view.endEditing(true)
+		uiviewTextFirsResponser()
 	}
 	
 	private func finalGestureAnimate(_ dismiss: Bool){
@@ -321,6 +326,22 @@ class BlureVC: UIViewController {
 		
 	}
 	
+	
+	@discardableResult func uiviewTextFirsResponser() -> Bool{
+		
+		if sertchBar?.isFirstResponder ?? false{
+			sertchBar?.resignFirstResponder()
+			return true
+		}
+		
+		if let TF = self.TFArray.first(where: {$0.isFirstResponder}){
+			TF.resignFirstResponder()
+			return true
+		}
+		
+		return false
+	}
+
 
 }
 
