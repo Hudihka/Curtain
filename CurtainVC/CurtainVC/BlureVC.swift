@@ -206,10 +206,7 @@ class BlureVC: UIViewController {
 	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
 		
 //		let velY = sender.velocity(in: self.view).y
-		let pointY = sender.translation(in: self.view).y
-		
-		print("-------------------------")
-		print(pointY)
+		let pointY = sender.translation(in: self.curtain).y
 		
 
 		var frame = CGRect()
