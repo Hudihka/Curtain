@@ -162,8 +162,12 @@ class BlureVC: UIViewController {
 				
 				SV!.addObserver(self, forKeyPath: #keyPath(UIScrollView.contentOffset), options: [.new, .old], context: nil)
 				
-				let panGestureRecognizerSV = UIPanGestureRecognizer(target: self, action: #selector(panGestureSV(sender:)))
-				self.SV!.addGestureRecognizer(panGestureRecognizerSV)
+				
+				let pan = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
+				self.view.addGestureRecognizer(pan)
+				
+				self.SV?.panGestureRecognizer.addTarget(self, action: #selector(panGestureSV(sender:)))
+
 			}
 			
 		}
@@ -238,10 +242,9 @@ class BlureVC: UIViewController {
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
 			self.finalGestureAnimate(dismiss)
 		}
-		
-
 	}
 	
+    @objc func handlePan(_ recognizer: UIPanGestureRecognizer){}
 	
 	//переход из крайней позиции скролла таблицы в драг анд дроп шторки
 	
