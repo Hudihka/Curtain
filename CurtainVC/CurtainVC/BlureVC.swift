@@ -29,8 +29,8 @@ class BlureVC: UIViewController {
 	private var frozeSV = false
 	private var startRelod = false
 	
-	private var startLocation: CGFloat = 0
 	private var startPositionFronz: CGFloat = 0
+	private var velositu: CGFloat = 0
 	
 	
 	private var allView = [UIView]()
@@ -151,12 +151,13 @@ class BlureVC: UIViewController {
 		let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(panGesture(sender:)))
         curtain.addGestureRecognizer(panGestureRecognizer)
 		
-		//дисмис клавиатуры и всего
-		
 		let tabGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapGesture(sender:)))
         blureView?.addGestureRecognizer(tabGestureRecognizer)
 		
 		self.allView = curtain.recurrenceAllSubviews
+		
+		
+		
 		self.allView.forEach { (view) in
 			if let viewSV = view as? UIScrollView, viewSV.isScrollEnabled {
 				self.SV = viewSV
@@ -222,26 +223,23 @@ class BlureVC: UIViewController {
 	
 	@objc func panGestureSV(sender: UIPanGestureRecognizer) {
 		
-//		let velY = sender.velocity(in: self.view).y
+		let velY = sender.velocity(in: self.view).y
 		let pointY = sender.translation(in: self.curtain).y
+		
+		print(pointY)
 		
 
 		var frame = CGRect()
 		
 		switch sender.state {
 		case .began:
-			startLocation = SV!.contentOffset.y
+			velositu = 0
 			startPositionFronz = 0
 		case .changed:
 		
-			SV!.setContentOffset(CGPoint(x: 0, y: startLocation - pointY), animated: false)
-		
-			
 			if frozeSV {
 				let delta = -1 * (startPositionFronz - pointY)
 				
-				
-
 				frame = CurtainConstant.newFrame(translatedPointY: delta)
 				frameFromGestures(frame)
 			} else {
@@ -252,18 +250,17 @@ class BlureVC: UIViewController {
 		default:
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
 			self.finalGestureAnimate(dismiss)
+			
+			//что бы не было пустых срабатываний
+			
+			if SV!.contentOffset.y > 10 {
+				velositu = velY
+			}
 		}
 	}
 	
     @objc func handlePan(_ recognizer: UIPanGestureRecognizer){}
 	
-	//переход из крайней позиции скролла таблицы в драг анд дроп шторки
-	
-	private func isDragAndDrop(_ tarnslateY: CGFloat) -> Bool{
-		let minValue = min(SV!.frame.height, SV!.contentSize.height)
-		
-		return minValue > abs(tarnslateY)
-	}
 	
     override open func observeValue(forKeyPath keyPath: String?,
 									of object: Any?, change: [NSKeyValueChangeKey : Any]?,
@@ -280,6 +277,22 @@ class BlureVC: UIViewController {
                 scroll.setContentOffset(.zero, animated: false)
 				
 				self.frozeSV = true
+				
+				/*
+				чем выше это значение, тем сильнее надо проскролить
+				таблицу что бы ушла шторка
+				*/
+				
+				if velositu > 1200{
+					let time: TimeInterval = velositu > 1600 ?	 smallWayTimeInterval : 0.3
+					
+					velositu = 0
+					self.finalGestureAnimate(true, time: time)
+					
+					return
+				}
+				
+				
 				return
             }
 
@@ -305,13 +318,16 @@ class BlureVC: UIViewController {
 		uiviewTextFirsResponser()
 	}
 	
-	private func finalGestureAnimate(_ dismiss: Bool){
+	private func finalGestureAnimate(_ dismiss: Bool,
+									 time: TimeInterval = smallWayTimeInterval){
 		
 		blureView.enumBlureValue = dismiss ? .min : .max
 		let finishAlpha: CGFloat = dismiss ? 0 : 1
 		let frame = dismiss ?  CurtainConstant.startFrame : CurtainConstant.finishFrame
 		
-		UIView.animate(withDuration: smallWayTimeInterval,
+		
+		
+		UIView.animate(withDuration: time,
 					   delay: 0,
 					   options: [.curveEaseOut],
 					   animations: {

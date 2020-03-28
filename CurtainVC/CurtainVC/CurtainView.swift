@@ -9,10 +9,6 @@
 import UIKit
 
 class CurtainView: UIView {
-	//нужно для направления прокрутки
-	private var lastContentOffset: CGFloat = 0.5
-	
-	private var scrollViewObj: UIScrollView?
 	
 	var dissmisBlock: () -> () = { }
 	
