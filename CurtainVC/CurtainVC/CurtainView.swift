@@ -41,6 +41,10 @@ class CurtainView: UIView {
 										   height: 30))
 		TF.backgroundColor = UIColor.white
 		TF.autocorrectionType = .no
+		
+		TF.inputAccessoryView = CustomToolBar()
+		
+		
 		self.addSubview(TF)
 		
 		self.desingTV()
