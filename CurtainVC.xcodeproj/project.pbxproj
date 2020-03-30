@@ -21,8 +21,8 @@
 		527691DE241CBD970079FF64 /* BlureVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691DD241CBD970079FF64 /* BlureVC.swift */; };
 		527691E2241CC08C0079FF64 /* UIWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691E0241CC08C0079FF64 /* UIWindows.swift */; };
 		527691E3241CC08C0079FF64 /* Vibro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691E1241CC08C0079FF64 /* Vibro.swift */; };
-		52A3380624325C0D004D2806 /* CustomToolBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A3380524325C0D004D2806 /* CustomToolBar.swift */; };
-		52A3380824325D82004D2806 /* CustomToolBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A3380724325D82004D2806 /* CustomToolBar.xib */; };
+		52A3380A2432686B004D2806 /* FieldInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A338092432686B004D2806 /* FieldInputView.swift */; };
+		52A3380C243268B0004D2806 /* FieldInputView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 52A3380B243268B0004D2806 /* FieldInputView.xib */; };
 		52A57800241CC83900260AC7 /* CurtainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A577FF241CC83900260AC7 /* CurtainView.swift */; };
 /* End PBXBuildFile section */
 
@@ -43,8 +43,8 @@
 		527691DD241CBD970079FF64 /* BlureVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlureVC.swift; sourceTree = "<group>"; };
 		527691E0241CC08C0079FF64 /* UIWindows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIWindows.swift; sourceTree = "<group>"; };
 		527691E1241CC08C0079FF64 /* Vibro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vibro.swift; sourceTree = "<group>"; };
-		52A3380524325C0D004D2806 /* CustomToolBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToolBar.swift; sourceTree = "<group>"; };
-		52A3380724325D82004D2806 /* CustomToolBar.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomToolBar.xib; sourceTree = "<group>"; };
+		52A338092432686B004D2806 /* FieldInputView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldInputView.swift; sourceTree = "<group>"; };
+		52A3380B243268B0004D2806 /* FieldInputView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FieldInputView.xib; sourceTree = "<group>"; };
 		52A577FF241CC83900260AC7 /* CurtainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurtainView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -107,8 +107,8 @@
 				527691D9241CB4CA0079FF64 /* CurtainConstant.swift */,
 				527691DD241CBD970079FF64 /* BlureVC.swift */,
 				52A577FF241CC83900260AC7 /* CurtainView.swift */,
-				52A3380524325C0D004D2806 /* CustomToolBar.swift */,
-				52A3380724325D82004D2806 /* CustomToolBar.xib */,
+				52A338092432686B004D2806 /* FieldInputView.swift */,
+				52A3380B243268B0004D2806 /* FieldInputView.xib */,
 			);
 			path = CurtainVC;
 			sourceTree = "<group>";
@@ -182,9 +182,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				52A3380824325D82004D2806 /* CustomToolBar.xib in Resources */,
 				527691CD241CAC5E0079FF64 /* LaunchScreen.storyboard in Resources */,
 				527691CA241CAC5E0079FF64 /* Assets.xcassets in Resources */,
+				52A3380C243268B0004D2806 /* FieldInputView.xib in Resources */,
 				527691C8241CAC590079FF64 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -202,7 +202,7 @@
 				527691DA241CB4CA0079FF64 /* CurtainConstant.swift in Sources */,
 				527691E2241CC08C0079FF64 /* UIWindows.swift in Sources */,
 				5262A5932424F6DD00188123 /* Pannable.swift in Sources */,
-				52A3380624325C0D004D2806 /* CustomToolBar.swift in Sources */,
+				52A3380A2432686B004D2806 /* FieldInputView.swift in Sources */,
 				527691D6241CAD2D0079FF64 /* Constats.swift in Sources */,
 				527691D8241CAE030079FF64 /* VisualEffectView.swift in Sources */,
 				527691DE241CBD970079FF64 /* BlureVC.swift in Sources */,

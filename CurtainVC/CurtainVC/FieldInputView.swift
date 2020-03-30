@@ -1,19 +1,21 @@
 //
-//  CustomToolBar.swift
+//  FieldInputView.swift
 //  CurtainVC
 //
-//  Created by Hudihka on 30/03/2020.
+//  Created by Hudihka on 31/03/2020.
 //  Copyright © 2020 Tatyana. All rights reserved.
 //
 
 import UIKit
 
-class CustomToolBar: UIToolbar {
+class FieldInputView: UIView {
 	
-	@IBOutlet var counteinerView: UIToolbar!
+	var doneBlock: () -> () = { }
+	
+	@IBOutlet var counteinerView: UIView!
 	
 	init() {
-		super.init(frame: CGRect(x: 0, y: 0, width: wDdevice, height: 40))
+		super.init(frame: CGRect(x: 0, y: 0, width: wDdevice, height: 44))
 	}
 	
 	override init (frame: CGRect) {
@@ -28,17 +30,19 @@ class CustomToolBar: UIToolbar {
 	
 
 	private func xibSetup() {
-		if let TB = loadViewFromNib("CustomToolBar") as? UIToolbar{
-			counteinerView = TB
-			counteinerView.frame = bounds
-			counteinerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-			addSubview(counteinerView )
-		}
+		counteinerView = loadViewFromNib("FieldInputView")
+		counteinerView.frame = bounds
+		counteinerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+		addSubview(counteinerView )
 	}
 	
 	private func settingsView(){
-		self.backgroundColor = UIColor.red
 	}
+	
+	@IBAction func done(_ sender: UIButton) {
+		self.doneBlock()
+	}
+	
 
 }
 
@@ -53,3 +57,4 @@ extension UIView {
 		}
 	}
 }
+
