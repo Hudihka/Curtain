@@ -40,10 +40,12 @@ class CurtainView: UIView {
 										   width: 150,
 										   height: 30))
 		TF.backgroundColor = UIColor.white
-		TF.autocorrectionType = .no
 		
-		TF.inputAccessoryView = CustomToolBar()
+		//проверить
+		TF.addFieldView()
 		
+//		TF.autocorrectionType = .no
+//		TF.inputAccessoryView = FieldInputView()
 		
 		self.addSubview(TF)
 		

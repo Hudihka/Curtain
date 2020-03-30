@@ -33,7 +33,7 @@ class FieldInputView: UIView {
 		counteinerView = loadViewFromNib("FieldInputView")
 		counteinerView.frame = bounds
 		counteinerView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-		addSubview(counteinerView )
+		addSubview(counteinerView)
 	}
 	
 	private func settingsView(){
@@ -58,3 +58,19 @@ extension UIView {
 	}
 }
 
+
+extension UITextField {
+	
+	func addFieldView(){
+		
+		self.autocorrectionType = .no
+		let viewInput = FieldInputView()
+		self.inputAccessoryView = viewInput
+		
+		viewInput.doneBlock = {
+			self.becomeFirstResponder()
+		}
+		
+	}
+	
+}
