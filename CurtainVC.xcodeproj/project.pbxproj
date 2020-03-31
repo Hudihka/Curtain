@@ -22,6 +22,8 @@
 		527691E2241CC08C0079FF64 /* UIWindows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691E0241CC08C0079FF64 /* UIWindows.swift */; };
 		527691E3241CC08C0079FF64 /* Vibro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691E1241CC08C0079FF64 /* Vibro.swift */; };
 		52A57800241CC83900260AC7 /* CurtainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A577FF241CC83900260AC7 /* CurtainView.swift */; };
+		B27C12F224339E8D00C60FB6 /* FieldInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B27C12F024339E8D00C60FB6 /* FieldInputAccessoryView.swift */; };
+		B27C12F324339E8D00C60FB6 /* FieldInputAccessoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B27C12F124339E8D00C60FB6 /* FieldInputAccessoryView.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 		527691E0241CC08C0079FF64 /* UIWindows.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIWindows.swift; sourceTree = "<group>"; };
 		527691E1241CC08C0079FF64 /* Vibro.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vibro.swift; sourceTree = "<group>"; };
 		52A577FF241CC83900260AC7 /* CurtainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurtainView.swift; sourceTree = "<group>"; };
+		B27C12F024339E8D00C60FB6 /* FieldInputAccessoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldInputAccessoryView.swift; sourceTree = "<group>"; };
+		B27C12F124339E8D00C60FB6 /* FieldInputAccessoryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FieldInputAccessoryView.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +107,8 @@
 				527691D9241CB4CA0079FF64 /* CurtainConstant.swift */,
 				527691DD241CBD970079FF64 /* BlureVC.swift */,
 				52A577FF241CC83900260AC7 /* CurtainView.swift */,
+				B27C12F024339E8D00C60FB6 /* FieldInputAccessoryView.swift */,
+				B27C12F124339E8D00C60FB6 /* FieldInputAccessoryView.xib */,
 			);
 			path = CurtainVC;
 			sourceTree = "<group>";
@@ -179,6 +185,7 @@
 				527691CD241CAC5E0079FF64 /* LaunchScreen.storyboard in Resources */,
 				527691CA241CAC5E0079FF64 /* Assets.xcassets in Resources */,
 				527691C8241CAC590079FF64 /* Main.storyboard in Resources */,
+				B27C12F324339E8D00C60FB6 /* FieldInputAccessoryView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,6 +199,7 @@
 				5262A5952424F6DD00188123 /* BottomSheetController.swift in Sources */,
 				52A57800241CC83900260AC7 /* CurtainView.swift in Sources */,
 				527691E3241CC08C0079FF64 /* Vibro.swift in Sources */,
+				B27C12F224339E8D00C60FB6 /* FieldInputAccessoryView.swift in Sources */,
 				527691DA241CB4CA0079FF64 /* CurtainConstant.swift in Sources */,
 				527691E2241CC08C0079FF64 /* UIWindows.swift in Sources */,
 				5262A5932424F6DD00188123 /* Pannable.swift in Sources */,

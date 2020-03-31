@@ -1,7 +1,4 @@
 //
-//  CurtainView.swift
-//  CurtainVC
-//
 //  Created by Hudihka on 14/03/2020.
 //  Copyright © 2020 Tatyana. All rights reserved.
 //
@@ -30,11 +27,23 @@ class CurtainView: UIView {
 		self.backgroundColor = UIColor.red
 		
 		let button = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
+		
+		
 		button.backgroundColor = .green
 		button.setTitle("Test Button", for: .normal)
 		button.addTarget(self, action: #selector(dissmisSelf), for: .touchUpInside)
 
 		self.addSubview(button)
+		
+		let TF = UITextField(frame: CGRect(x: 10,
+										   y: 90,
+										   width: 150,
+										   height: 30))
+		TF.backgroundColor = UIColor.white
+		
+		TF.addFieldView()
+		
+		self.addSubview(TF)
 		
 		self.desingTV()
 		
@@ -74,7 +83,7 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 	
 	func desingTV(){
 		
-		self.tableView = UITableView(frame: CGRect(x: 0, y: 100, width: wDdevice, height: 300))
+		self.tableView = UITableView(frame: CGRect(x: 0, y: 130, width: wDdevice, height: 300))
 		self.tableView.delegate = self
 		self.tableView.dataSource = self
 		
@@ -87,5 +96,33 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 	
 }
 	
+extension UIView {
+    @objc func loadViewFromNib(_ name: String) -> UIView { //добавление вью созданной в ксиб файле
+        let bundle = Bundle(for: type(of: self))
+        let nib = UINib(nibName: name, bundle: bundle)
+        if let view = nib.instantiate(withOwner: self, options: nil)[0] as? UIView {
+            return view
+        } else {
+            return UIView()
+        }
+    }
+}
+
+
+extension UITextField {
+    
+    func addFieldView(){
+        
+        self.autocorrectionType = .no
+        let viewInput = FieldInputAccessoryView()
+        self.inputAccessoryView = viewInput
+        
+        viewInput.doneBlock = {
+            self.resignFirstResponder()
+        }
+        
+    }
+    
+}
 
 

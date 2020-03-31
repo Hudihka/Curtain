@@ -55,7 +55,7 @@ struct CurtainConstant {
 	//когда высота шторки равна procentReloadBlure * heightCurtain
 	//начиинаем менять блюр и альфу
 	
-	private static let procentDissmisCurtain: CGFloat = 0.45
+	private static let procentDissmisCurtain: CGFloat = 0.65
 	
 	// дисмисмисем
 	

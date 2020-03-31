@@ -189,7 +189,6 @@ open class BottomSheetController: UIViewController {
                 freezeContentOffset = true
                 scrollView!.setContentOffset(lastOffset, animated: false)
             }else{
-				print("111111111")
                 lastOffset = scrollView!.contentOffset
             }
         default:
@@ -230,7 +229,6 @@ open class BottomSheetController: UIViewController {
         
         if freezeContentOffset && scrollView!.panGestureRecognizer.state == .ended{
 			
-			print("----------")
             scrollView!.setContentOffset(lastOffset, animated: false)
         }
         
