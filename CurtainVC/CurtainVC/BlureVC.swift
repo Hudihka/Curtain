@@ -226,8 +226,6 @@ class BlureVC: UIViewController {
 		let velY = sender.velocity(in: self.view).y
 		let pointY = sender.translation(in: self.curtain).y
 		
-		print(pointY)
-		
 
 		var frame = CGRect()
 		
@@ -284,10 +282,10 @@ class BlureVC: UIViewController {
 				*/
 				
 				if velositu > 1200{
-					let time: TimeInterval = velositu > 1600 ?	 smallWayTimeInterval : 0.3
+					let time: TimeInterval = velositu > 1600 ? allWayTimeInterval : 0.4
 					
 					velositu = 0
-					self.finalGestureAnimate(true, time: time)
+					self.finalGestureAnimate(true, time: time, inertion: true)
 					
 					return
 				}
@@ -319,17 +317,17 @@ class BlureVC: UIViewController {
 	}
 	
 	private func finalGestureAnimate(_ dismiss: Bool,
-									 time: TimeInterval = smallWayTimeInterval){
+									 time: TimeInterval = smallWayTimeInterval,
+                                     inertion: Bool = false){
 		
 		blureView.enumBlureValue = dismiss ? .min : .max
 		let finishAlpha: CGFloat = dismiss ? 0 : 1
 		let frame = dismiss ?  CurtainConstant.startFrame : CurtainConstant.finishFrame
 		
 		
-		
 		UIView.animate(withDuration: time,
 					   delay: 0,
-					   options: [.curveEaseOut],
+					   options: inertion ? [] : [.curveEaseOut],
 					   animations: {
 						self.blureView.blureValue()
 						self.curtain?.frame = frame
