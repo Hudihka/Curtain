@@ -45,7 +45,7 @@ class CurtainView: UIView {
 		TF.addFieldView()
 		
 //		TF.autocorrectionType = .no
-//		TF.inputAccessoryView = FieldInputView()
+//		TF.inputAccessoryView = FieldInputAccessoryView()
 		
 		self.addSubview(TF)
 		

@@ -10,13 +10,13 @@ import UIKit
 
 class FieldInputView: UIView {
 	
-	var doneBlock: () -> () = { }
+//	var doneBlock: () -> () = { }
 	
 	@IBOutlet var counteinerView: UIView!
 	
-	init() {
-		super.init(frame: CGRect(x: 0, y: 0, width: wDdevice, height: 44))
-	}
+//	init() {
+//		super.init(frame: CGRect(x: 0, y: 0, width: wDdevice, height: 44))
+//	}
 	
 	override init (frame: CGRect) {
         super.init(frame: frame)
@@ -40,7 +40,7 @@ class FieldInputView: UIView {
 	}
 	
 	@IBAction func done(_ sender: UIButton) {
-		self.doneBlock()
+//		self.doneBlock()
 	}
 	
 
@@ -64,11 +64,11 @@ extension UITextField {
 	func addFieldView(){
 		
 		self.autocorrectionType = .no
-		let viewInput = FieldInputView()
+		let viewInput = FieldInputAccessoryView()
 		self.inputAccessoryView = viewInput
 		
 		viewInput.doneBlock = {
-			self.becomeFirstResponder()
+            self.resignFirstResponder()
 		}
 		
 	}
