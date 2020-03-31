@@ -8,10 +8,6 @@
 
 import UIKit
 
-protocol FieldInputAccessoryViewDelegate: class {
-    
-    func fieldInputAccessoryViewDoneButtonTapped(_ fieldInputAccessoryView: FieldInputAccessoryView)
-}
 
 class FieldInputAccessoryView: UIView {
     
@@ -19,34 +15,7 @@ class FieldInputAccessoryView: UIView {
 
     @IBOutlet weak var contentView: UIView!
     @IBOutlet weak var toolbar: UIToolbar!
-    @IBOutlet weak var doneButtonItem: UIBarButtonItem!
-    @IBOutlet weak var nextButtonItem: UIBarButtonItem!
-    @IBOutlet weak var prevButtonItem: UIBarButtonItem!
-    
-    weak var delegate: FieldInputAccessoryViewDelegate?
-    
-    var firstFieldTag: Int?
-    var lastFieldTag: Int?
-    var currentFieldTag: Int? {
         
-        didSet {
-            
-            if let currentFieldTag = currentFieldTag {
-                
-                doneButtonItem.isEnabled = true
-                nextButtonItem.isEnabled = currentFieldTag != lastFieldTag
-                prevButtonItem.isEnabled = currentFieldTag != firstFieldTag
-                
-            } else {
-                
-                toolbar.items?.forEach({
-                    
-                    $0.isEnabled = false
-                })
-            }
-        }
-    }
-    
     
     // MARK: - Init
     
@@ -71,7 +40,6 @@ class FieldInputAccessoryView: UIView {
         contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         addSubview(contentView)
         
-//        doneButtonItem.setTitleTextAttributes([NSAttributedStringKey.font : UIFont(name:kLatoMedium, size: 15)!], for: .normal)
     }
     
     override var intrinsicContentSize: CGSize {
@@ -84,10 +52,6 @@ class FieldInputAccessoryView: UIView {
     
     @IBAction func doneButtonTapped(_ sender: Any) {
         doneBlock()
-//        if let delegate = delegate {
-//
-//            delegate.fieldInputAccessoryViewDoneButtonTapped(self)
-//        }
     }
     
 }

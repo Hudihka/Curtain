@@ -41,11 +41,7 @@ class CurtainView: UIView {
 										   height: 30))
 		TF.backgroundColor = UIColor.white
 		
-		//проверить
 		TF.addFieldView()
-		
-//		TF.autocorrectionType = .no
-//		TF.inputAccessoryView = FieldInputAccessoryView()
 		
 		self.addSubview(TF)
 		
@@ -100,5 +96,33 @@ extension CurtainView: UITableViewDelegate, UITableViewDataSource {
 	
 }
 	
+extension UIView {
+    @objc func loadViewFromNib(_ name: String) -> UIView { //добавление вью созданной в ксиб файле
+        let bundle = Bundle(for: type(of: self))
+        let nib = UINib(nibName: name, bundle: bundle)
+        if let view = nib.instantiate(withOwner: self, options: nil)[0] as? UIView {
+            return view
+        } else {
+            return UIView()
+        }
+    }
+}
+
+
+extension UITextField {
+    
+    func addFieldView(){
+        
+        self.autocorrectionType = .no
+        let viewInput = FieldInputAccessoryView()
+        self.inputAccessoryView = viewInput
+        
+        viewInput.doneBlock = {
+            self.resignFirstResponder()
+        }
+        
+    }
+    
+}
 
 
