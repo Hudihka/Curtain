@@ -126,3 +126,17 @@ extension UITextField {
 }
 
 
+extension UISearchBar {
+    
+    func addFieldViewSB(){
+        
+        
+        if let textfield = self.value(forKey: "searchField") as? UITextField {
+            textfield.addFieldView()
+
+        }
+        
+    }
+    
+}
+
