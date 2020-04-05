@@ -24,6 +24,8 @@ class CurtainView: UIView {
 	}
 	
 	private func startDesing(){
+		
+		
 		self.backgroundColor = UIColor.red
 		
 		let button = UIButton(frame: CGRect(x: 0, y: 0, width: 80, height: 80))
@@ -46,6 +48,10 @@ class CurtainView: UIView {
 		self.addSubview(TF)
 		
 		self.desingTV()
+		
+		if let radius = CurtainConstant.radiusCurtain {
+			self.addRadius(number: radius)
+		}
 		
 	}
 	

@@ -98,6 +98,7 @@ class BlureVC: UIViewController {
 			self.spiner.startAnimating()
 		case .curtain:
 			self.curtain = CurtainView()
+			self.curtain?.addShadow()
 			curtainAnimmate(addCurtain: true)
 		}
 	}
@@ -193,12 +194,20 @@ class BlureVC: UIViewController {
 		let frame = CurtainConstant.newFrame(translatedPointY: translatedPoint)
 
 		frameFromGestures(frame)
+		newRadius(translatedPoint)
 		
 		if sender.state == .ended {
 			let dismiss = CurtainConstant.dismiss(yPoint: frame.origin.y)
 			self.finalGestureAnimate(dismiss)
 		}
 		
+	}
+	
+	private func newRadius(_ pointTranslation: CGFloat){
+		
+		if let newRadius = CurtainConstant.newRadius(translatedPointY: pointTranslation){
+			self.curtain?.addRadius(number: newRadius)
+		}
 	}
 	
 	private func frameFromGestures(_ newFrame: CGRect){
@@ -240,6 +249,7 @@ class BlureVC: UIViewController {
 				
 				frame = CurtainConstant.newFrame(translatedPointY: delta)
 				frameFromGestures(frame)
+				newRadius(delta)
 			} else {
 				startPositionFronz = pointY
 			}
@@ -332,6 +342,11 @@ class BlureVC: UIViewController {
 						self.blureView.blureValue()
 						self.curtain?.frame = frame
 						self.aphaAllContentCurtain(alpha: finishAlpha)
+						
+						if !dismiss{
+							self.newRadius(0)
+						}
+						
 		}) {[weak self] (compl) in
 			if compl, dismiss{
 				self?.dismiss(animated: false, completion: nil)
