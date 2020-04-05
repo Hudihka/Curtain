@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		525C069D243A143E009B2C6C /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525C069C243A143E009B2C6C /* Extension.swift */; };
 		5262A5932424F6DD00188123 /* Pannable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5262A5902424F6DD00188123 /* Pannable.swift */; };
 		5262A5942424F6DD00188123 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5262A5912424F6DD00188123 /* Extensions.swift */; };
 		5262A5952424F6DD00188123 /* BottomSheetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5262A5922424F6DD00188123 /* BottomSheetController.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		525C069C243A143E009B2C6C /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		5262A5902424F6DD00188123 /* Pannable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pannable.swift; sourceTree = "<group>"; };
 		5262A5912424F6DD00188123 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		5262A5922424F6DD00188123 /* BottomSheetController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BottomSheetController.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				527691E1241CC08C0079FF64 /* Vibro.swift */,
 				527691D5241CAD2D0079FF64 /* Constats.swift */,
 				527691D7241CAE030079FF64 /* VisualEffectView.swift */,
+				525C069C243A143E009B2C6C /* Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 				5262A5932424F6DD00188123 /* Pannable.swift in Sources */,
 				527691D6241CAD2D0079FF64 /* Constats.swift in Sources */,
 				527691D8241CAE030079FF64 /* VisualEffectView.swift in Sources */,
+				525C069D243A143E009B2C6C /* Extension.swift in Sources */,
 				527691DE241CBD970079FF64 /* BlureVC.swift in Sources */,
 				527691C5241CAC590079FF64 /* ViewController.swift in Sources */,
 				5262A5942424F6DD00188123 /* Extensions.swift in Sources */,
