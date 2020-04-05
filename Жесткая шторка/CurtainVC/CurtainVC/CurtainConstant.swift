@@ -11,6 +11,13 @@ import UIKit
 
 struct CurtainConstant {
 	
+	//радиус шторки
+	static let radiusCurtain: CGFloat? = 15
+	
+	//чем больше kDown, тем проще тянут в низ
+	
+	private static let kDown: CGFloat = 6
+	
 	//высота видимой части шторки
 	
 	static var heightCurtain: CGFloat = 450
@@ -33,7 +40,7 @@ struct CurtainConstant {
 	//когда высота шторки равна procentReloadBlure * heightCurtain
 	//начиинаем менять блюр и альфу
 	
-	private static let procentReloadBlure: CGFloat = 0.6
+	private static let procentReloadBlure: CGFloat = 0.9
 	
 	//это высота шторки начиная с которой мы меняем блюр
 	
@@ -53,9 +60,9 @@ struct CurtainConstant {
 	
 	//процентрное значение,
 	//когда высота шторки равна procentReloadBlure * heightCurtain
-	//начиинаем менять блюр и альфу
+	//начиинаем дисмисеть
 	
-	private static let procentDissmisCurtain: CGFloat = 0.65
+	private static let procentDissmisCurtain: CGFloat = 0.75
 	
 	// дисмисмисем
 	
@@ -69,19 +76,47 @@ struct CurtainConstant {
 	//выщитываем новый фрейм
 	
 	static func newFrame(translatedPointY: CGFloat) -> CGRect{
+				//тянем в низ
+		let k: CGFloat = translatedPointY > 0 ? kDown : -3
 		
-		var yDelta: CGFloat = 0
-		
-		if translatedPointY > 0{
-			
-			yDelta = translatedPointY
-			
-		} else {
-			yDelta = -3 * sqrt(abs(translatedPointY))
-		}
-		
+		let yDelta: CGFloat = k * sqrt(abs(translatedPointY))
 		
 		return CGRect(origin: CGPoint(x: 0, y: finishYPoint + yDelta), size: size)
 	}
+	
+	//новый радиус
+	//радиус плавно меняется между начальной позицией
+	//и позицией когда начинаем менять альфу
+	
+	static func newRadius(translatedPointY: CGFloat) -> CGFloat?{
+		
+		if let radius = radiusCurtain {
+			
+			//тянем в низ
+			if translatedPointY > 0{
+				
+				let newPosition = kDown * sqrt(translatedPointY) + finishYPoint
+				
+				if newPosition >= startYPositionReloadBlure{
+					return 0
+				} else {
+					
+					let dist = finishYPoint - startYPositionReloadBlure
+					let way = newPosition - startYPositionReloadBlure
+					
+					return way * radius / dist
+				}
+				
+				
+			} else {
+				return radiusCurtain
+			}
+			
+		}
+		
+		return nil
+		
+	}
+	
 	
 }

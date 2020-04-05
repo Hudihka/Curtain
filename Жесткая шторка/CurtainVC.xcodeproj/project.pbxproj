@@ -7,7 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		525C069D243A143E009B2C6C /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525C069C243A143E009B2C6C /* Extension.swift */; };
+
+		525C069B243A0C8C009B2C6C /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 525C069A243A0C8C009B2C6C /* Extension.swift */; };
 		527691C1241CAC590079FF64 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691C0241CAC590079FF64 /* AppDelegate.swift */; };
 		527691C5241CAC590079FF64 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527691C4241CAC590079FF64 /* ViewController.swift */; };
 		527691C8241CAC590079FF64 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 527691C6241CAC590079FF64 /* Main.storyboard */; };
@@ -25,7 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		525C069C243A143E009B2C6C /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+
+		525C069A243A0C8C009B2C6C /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		527691BD241CAC590079FF64 /* CurtainVC.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CurtainVC.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		527691C0241CAC590079FF64 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		527691C4241CAC590079FF64 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -105,7 +107,7 @@
 				527691E1241CC08C0079FF64 /* Vibro.swift */,
 				527691D5241CAD2D0079FF64 /* Constats.swift */,
 				527691D7241CAE030079FF64 /* VisualEffectView.swift */,
-				525C069C243A143E009B2C6C /* Extension.swift */,
+				525C069A243A0C8C009B2C6C /* Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -186,6 +188,7 @@
 				527691E3241CC08C0079FF64 /* Vibro.swift in Sources */,
 				B27C12F224339E8D00C60FB6 /* FieldInputAccessoryView.swift in Sources */,
 				527691DA241CB4CA0079FF64 /* CurtainConstant.swift in Sources */,
+				525C069B243A0C8C009B2C6C /* Extension.swift in Sources */,
 				527691E2241CC08C0079FF64 /* UIWindows.swift in Sources */,
 				527691D6241CAD2D0079FF64 /* Constats.swift in Sources */,
 				527691D8241CAE030079FF64 /* VisualEffectView.swift in Sources */,
