@@ -99,8 +99,19 @@ class BlureVC: UIViewController {
 		case .curtain:
 			self.curtain = CurtainView()
 			self.curtain?.addShadow()
+            
+            //настраиваем радиус
+            if let radius = CurtainConstant.radiusCurtain {
+                self.curtain?.addRadius(number: radius)
+            }
+
+            
 			curtainAnimmate(addCurtain: true)
 		}
+        
+        
+        
+        
 	}
 	
 	private func curtainAnimmate(addCurtain: Bool, completionDissmis: (() -> Void)? = nil){
@@ -134,6 +145,8 @@ class BlureVC: UIViewController {
 				if addCurtain {
 					self?.addPanGestures()
 				} else {
+                    //не забудь удалить все возможные шторки
+                    self?.curtain?.removeFromSuperview()
 					self?.dismiss(animated: false, completion: completionDissmis)
 				}
 			}
@@ -264,6 +277,11 @@ class BlureVC: UIViewController {
 			if SV!.contentOffset.y > 10 {
 				velositu = velY
 			}
+            
+            if sender.state == .ended {
+                //размораживает заморозку
+                self.frozeSV = false
+            }
 		}
 	}
 	
@@ -280,7 +298,10 @@ class BlureVC: UIViewController {
 			let height = scroll.frame.size.height
 			
 			
-			if offset <= 0{
+            //ИЛИ опущена ниже стартовой нужной точки
+            
+            if offset <= 0 || curtainIsDownStartPosition {
+
 				
                 scroll.setContentOffset(.zero, animated: false)
 				
@@ -291,8 +312,8 @@ class BlureVC: UIViewController {
 				таблицу что бы ушла шторка
 				*/
 				
-				if velositu > 1200{
-					let time: TimeInterval = velositu > 1600 ? allWayTimeInterval : 0.4
+				if velositu > 2700{
+					let time: TimeInterval = velositu > 2100 ? allWayTimeInterval : 0.4
 					
 					velositu = 0
 					self.finalGestureAnimate(true, time: time, inertion: true)
@@ -320,6 +341,11 @@ class BlureVC: UIViewController {
         }
     }
 	
+    // шторка опущена ниже стартовой позиции
+    private var curtainIsDownStartPosition: Bool{
+        guard let curtain = self.curtain else {return true}
+        return curtain.frame.origin.y > CurtainConstant.finishFrame.origin.y
+    }
 	
 	private func aphaAllContentCurtain(alpha: CGFloat){
 		allView.forEach({$0.alpha = alpha})
@@ -349,6 +375,8 @@ class BlureVC: UIViewController {
 						
 		}) {[weak self] (compl) in
 			if compl, dismiss{
+                //не забудь удалить все возможные шторки
+                self?.curtain?.removeFromSuperview()
 				self?.dismiss(animated: false, completion: nil)
 			}
 		}
