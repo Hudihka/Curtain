@@ -298,6 +298,7 @@ class BlureVC: UIViewController {
 			let height = scroll.frame.size.height
 			
 			
+            //условие когда таблица в самом верху и мы тяним в низ
             //ИЛИ опущена ниже стартовой нужной точки
             
             if offset <= 0 || curtainIsDownStartPosition {
@@ -328,6 +329,7 @@ class BlureVC: UIViewController {
 
 			let distanceFromBottom = scroll.contentSize.height - offset
 
+            //шторка проскроллена в низ и мы тянем вверх
 			if distanceFromBottom <= height {
 				let scrollPositionPoint = CGPoint(x: 0, y: scroll.contentSize.height - height)
 				scroll.setContentOffset(scrollPositionPoint, animated: false)
